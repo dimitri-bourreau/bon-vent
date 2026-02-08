@@ -25,9 +25,13 @@ export async function updateManyCompanies(
       }
     }
 
+    const contactedAt = dto.clearContactedAt
+      ? undefined
+      : (dto.contactedAt ?? company.contactedAt);
+
     return repository.update({
       id,
-      contactedAt: dto.contactedAt ?? company.contactedAt,
+      contactedAt,
       categories,
     });
   });

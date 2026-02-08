@@ -32,6 +32,7 @@ export const BulkEditForm = ({
 
   const [contactedAt, setContactedAt] = useState("");
   const [updateContactedAt, setUpdateContactedAt] = useState(false);
+  const [clearContactedAt, setClearContactedAt] = useState(false);
   const [addCategories, setAddCategories] = useState<string[]>([]);
   const [removeCategories, setRemoveCategories] = useState<string[]>([]);
 
@@ -41,6 +42,7 @@ export const BulkEditForm = ({
     await updateMany.mutateAsync({
       ids: selectedIds,
       contactedAt: updateContactedAt ? contactedAt || undefined : undefined,
+      clearContactedAt,
       addCategories: addCategories.length > 0 ? addCategories : undefined,
       removeCategories:
         removeCategories.length > 0 ? removeCategories : undefined,
@@ -48,6 +50,7 @@ export const BulkEditForm = ({
 
     setContactedAt("");
     setUpdateContactedAt(false);
+    setClearContactedAt(false);
     setAddCategories([]);
     setRemoveCategories([]);
     onSuccess();
@@ -84,9 +87,10 @@ export const BulkEditForm = ({
               <Checkbox
                 id="updateContactedAt"
                 checked={updateContactedAt}
-                onCheckedChange={(checked) =>
-                  setUpdateContactedAt(checked === true)
-                }
+                onCheckedChange={(checked) => {
+                  setUpdateContactedAt(checked === true);
+                  if (checked) setClearContactedAt(false);
+                }}
               />
               <Label htmlFor="updateContactedAt">
                 Modifier la date de contact
@@ -101,6 +105,22 @@ export const BulkEditForm = ({
                 }
               />
             )}
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="clearContactedAt"
+                checked={clearContactedAt}
+                onCheckedChange={(checked) => {
+                  setClearContactedAt(checked === true);
+                  if (checked) {
+                    setUpdateContactedAt(false);
+                    setContactedAt("");
+                  }
+                }}
+              />
+              <Label htmlFor="clearContactedAt" className="text-destructive">
+                Supprimer la date de contact
+              </Label>
+            </div>
           </div>
 
           <div className="space-y-2">

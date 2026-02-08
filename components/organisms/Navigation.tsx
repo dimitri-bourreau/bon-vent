@@ -7,6 +7,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { NavIcon } from "@/components/atoms/NavIcon";
 import { cn } from "@/features/ui/cn";
 import { exportAllData, importAllData } from "@/features/db/export";
+import { useFavorites } from "@/hooks/use-favorites.hook";
+import { useContacted } from "@/hooks/use-contacted.hook";
 
 const NAV_ITEMS = [
   {
@@ -39,6 +41,8 @@ export function Navigation() {
   const pathname = usePathname();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+  const { data: favorites = [] } = useFavorites();
+  const { data: contacted = [] } = useContacted();
 
   const handleExport = async () => {
     const data = await exportAllData();
@@ -68,6 +72,12 @@ export function Navigation() {
         <div className="flex items-center gap-1 sm:gap-2">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
+            const count =
+              item.href === "/favoris"
+                ? favorites.length
+                : item.href === "/contacts"
+                  ? contacted.length
+                  : null;
             return (
               <Link
                 key={item.href}
@@ -85,6 +95,11 @@ export function Navigation() {
                 />
                 <span className="hidden text-sm font-medium sm:inline">
                   {item.label}
+                  {count !== null && count > 0 && (
+                    <span className="ml-1 text-xs text-muted-foreground">
+                      ({count})
+                    </span>
+                  )}
                 </span>
               </Link>
             );

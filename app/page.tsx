@@ -6,7 +6,6 @@ import { SearchBar } from "@/components/molecules/SearchBar";
 import { ActivityChart } from "@/components/molecules/ActivityChart";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
-import { ObjectiveTracker } from "@/components/organisms/ObjectiveTracker";
 import { CategoryManager } from "@/components/organisms/CategoryManager";
 import { StatsOverview } from "@/components/organisms/StatsOverview";
 import { CalendarView } from "@/components/organisms/CalendarView";
@@ -68,8 +67,6 @@ export default function HomePage() {
       <div className="grid min-h-0 flex-1 gap-6 px-8 lg:grid-cols-[320px_1fr]">
         <aside className="flex flex-col gap-4">
           <StatsOverview />
-          <ObjectiveTracker />
-          <ActivityChart data={statusData} type="donut" />
           {categoryData.length > 0 && (
             <ActivityChart
               title="Par catégorie"

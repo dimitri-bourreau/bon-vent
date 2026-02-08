@@ -42,7 +42,7 @@ export function FavorisContent() {
         subtitle="Vos entreprises de rêve"
       />
 
-      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
+      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr] px-8">
         <aside className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
             <StatsCard

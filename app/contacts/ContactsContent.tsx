@@ -67,7 +67,7 @@ export function ContactsContent() {
         subtitle="Historique de vos prises de contact"
       />
 
-      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
+      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr] px-8">
         <aside className="flex flex-col gap-4">
           <div className="grid grid-cols-3 gap-3 lg:grid-cols-1">
             <StatsCard
@@ -80,7 +80,11 @@ export function ContactsContent() {
               value={waiting.length}
               variant="default"
             />
-            <StatsCard title="À relancer" value={overdue.length} variant="danger" />
+            <StatsCard
+              title="À relancer"
+              value={overdue.length}
+              variant="danger"
+            />
           </div>
           <ActivityChart
             title="Statut des contacts"

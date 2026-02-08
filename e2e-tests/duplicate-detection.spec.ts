@@ -20,7 +20,9 @@ test.describe("Duplicate Detection", () => {
   test("shows matching company names in warning", async ({ page }) => {
     await page.getByRole("button", { name: "+ Ajouter" }).click();
     await page.getByLabel("Nom *").fill("Tech");
-    await expect(page.getByText("TechStart")).toBeVisible();
+    await expect(
+      page.getByText("Entreprise similaire existante").filter({ hasText: "TechStart" }),
+    ).toBeVisible();
   });
 
   test("no warning for unique name", async ({ page }) => {

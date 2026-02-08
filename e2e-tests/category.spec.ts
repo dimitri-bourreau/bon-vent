@@ -5,6 +5,7 @@ test.describe("Categories", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await clearIndexedDB(page);
+    await page.reload();
     await seedDatabase(page);
     await page.reload();
   });

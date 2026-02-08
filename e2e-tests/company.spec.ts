@@ -29,8 +29,8 @@ test.describe("Company CRUD", () => {
     await page.getByLabel("Startup").check();
     await page.getByRole("button", { name: "Ajouter" }).click();
 
-    await expect(page.getByText("Categorized Company")).toBeVisible();
     const row = page.locator("tr", { hasText: "Categorized Company" });
+    await expect(row).toBeVisible();
     await expect(row.getByText("Tech, Startup")).toBeVisible();
   });
 

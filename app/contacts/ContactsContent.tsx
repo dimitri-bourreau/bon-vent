@@ -62,15 +62,10 @@ export function ContactsContent() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <div className="flex items-start justify-between gap-4">
-        <PageHeader
-          title="Entreprises contactées"
-          subtitle="Historique de vos prises de contact"
-        />
-        <Button onClick={() => setShowForm(true)} className="shrink-0">
-          + Ajouter
-        </Button>
-      </div>
+      <PageHeader
+        title="Entreprises contactées"
+        subtitle="Historique de vos prises de contact"
+      />
 
       <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
         <aside className="flex flex-col gap-4">
@@ -98,7 +93,12 @@ export function ContactsContent() {
           {favoriteContacts.length > 0 && (
             <FavoriteContactsList companies={favoriteContacts} />
           )}
-          <CategoryTabs />
+          <div className="flex items-center justify-between">
+            <CategoryTabs />
+            <Button onClick={() => setShowForm(true)} size="sm">
+              + Ajouter
+            </Button>
+          </div>
           <CompanyList
             companies={sorted}
             emptyMessage={

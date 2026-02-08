@@ -174,6 +174,23 @@
   animation: page-exit 0.2s ease-in forwards;
 }
 
+@keyframes wind {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 100%));
+    opacity: 0;
+  }
+}
+
 .bg-grid {
   background-image:
     linear-gradient(to right, oklch(0.5 0.1 250 / 0.03) 1px, transparent 1px),

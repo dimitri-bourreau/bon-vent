@@ -37,15 +37,10 @@ export function FavorisContent() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <div className="flex items-start justify-between gap-4">
-        <PageHeader
-          title="Entreprises pour lesquelles j'adorerais travailler"
-          subtitle="Vos entreprises de rêve"
-        />
-        <Button onClick={() => setShowForm(true)} className="shrink-0">
-          + Ajouter
-        </Button>
-      </div>
+      <PageHeader
+        title="Entreprises pour lesquelles j'adorerais travailler"
+        subtitle="Vos entreprises de rêve"
+      />
 
       <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
         <aside className="flex flex-col gap-4">
@@ -67,7 +62,12 @@ export function FavorisContent() {
         </aside>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">
-          <CategoryTabs />
+          <div className="flex items-center justify-between">
+            <CategoryTabs />
+            <Button onClick={() => setShowForm(true)} size="sm">
+              + Ajouter
+            </Button>
+          </div>
           <CompanyList
             companies={filtered}
             emptyMessage={

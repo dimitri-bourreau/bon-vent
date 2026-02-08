@@ -44,9 +44,9 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <PageHeader showLogo />
+      <PageHeader />
 
-      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
+      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]  px-8">
         <aside className="flex flex-col gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">

@@ -34,7 +34,7 @@ export function ObjectiveTracker() {
 
   return (
     <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
-      <CardHeader className="pb-3">
+      <CardHeader>
         <CardTitle className="flex items-center justify-between text-base">
           <span>Objectifs quotidiens</span>
           <div className="flex items-center gap-2">

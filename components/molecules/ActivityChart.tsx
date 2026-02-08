@@ -10,12 +10,11 @@ interface DataPoint {
 }
 
 interface Props {
-  title: string;
   data: DataPoint[];
   type?: "bar" | "donut";
 }
 
-export function ActivityChart({ title, data, type = "bar" }: Props) {
+export function ActivityChart({ data, type = "bar" }: Props) {
   const maxValue = useMemo(
     () => Math.max(...data.map((d) => d.value), 1),
     [data],
@@ -43,9 +42,6 @@ export function ActivityChart({ title, data, type = "bar" }: Props) {
   if (type === "donut") {
     return (
       <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        </CardHeader>
         <CardContent>
           <div className="flex items-center gap-6">
             <div className="relative h-24 w-24 shrink-0">

@@ -53,32 +53,7 @@ export default function HomePage() {
       <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr] px-8">
         <aside className="flex flex-col gap-4">
           <ObjectiveTracker />
-          <div className="grid grid-cols-2 gap-3">
-            <StatsCard
-              title="Total"
-              value={companies.length}
-              variant="default"
-            />
-            <StatsCard
-              title="Favoris"
-              value={favorites.length}
-              variant="warning"
-            />
-            <StatsCard
-              title="Contactées"
-              value={contacted.length}
-              variant="primary"
-            />
-            <StatsCard
-              title="En attente"
-              value={waiting.length + overdue.length}
-              variant={overdue.length > 0 ? "danger" : "success"}
-              subtitle={
-                overdue.length > 0 ? `${overdue.length} à relancer` : undefined
-              }
-            />
-          </div>
-          <ActivityChart title="Par statut" data={statusData} type="donut" />
+          <ActivityChart data={statusData} type="donut" />
           {categoryData.length > 0 && (
             <ActivityChart
               title="Par catégorie"

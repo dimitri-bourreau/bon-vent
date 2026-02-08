@@ -42,7 +42,7 @@ export function DomainManager() {
 
   return (
     <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
-      <CardHeader className="pb-3">
+      <CardHeader>
         <CardTitle className="text-base">Domaines favoris</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

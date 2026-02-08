@@ -49,12 +49,6 @@ export function FavorisContent() {
               value={favorites.length}
               variant="warning"
             />
-            <StatsCard
-              title="Affichées"
-              value={filtered.length}
-              variant="default"
-              subtitle={category ?? "Toutes catégories"}
-            />
           </div>
           <DomainManager />
         </aside>

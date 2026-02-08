@@ -35,7 +35,7 @@ export class CompanyApiAdapter implements CompanyRepository {
 
   async getContacted(): Promise<Company[]> {
     const all = await this.getAll();
-    return all.filter((c) => c.contactedAt && !c.isFavorite);
+    return all.filter((c) => !c.isFavorite);
   }
 
   async getOverdue(days = 7): Promise<Company[]> {

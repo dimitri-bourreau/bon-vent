@@ -6,6 +6,7 @@ import { StatsCard } from "@/components/molecules/StatsCard";
 import { ActivityChart } from "@/components/molecules/ActivityChart";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { ObjectiveTracker } from "@/components/organisms/ObjectiveTracker";
+import { CategoryManager } from "@/components/organisms/CategoryManager";
 import {
   useCompanies,
   useOverdue,
@@ -90,6 +91,7 @@ export default function HomePage() {
               type="bar"
             />
           )}
+          <CategoryManager />
         </aside>
 
         <div className="flex min-h-0 flex-col gap-6 overflow-auto">

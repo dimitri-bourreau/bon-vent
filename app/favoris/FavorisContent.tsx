@@ -8,7 +8,6 @@ import { StatsCard } from "@/components/molecules/StatsCard";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryTabs } from "@/components/organisms/CategoryTabs";
-import { CategoryManager } from "@/components/organisms/CategoryManager";
 import { DomainManager } from "@/components/organisms/DomainManager";
 import {
   useFavorites,
@@ -57,7 +56,6 @@ export function FavorisContent() {
               subtitle={category ?? "Toutes catégories"}
             />
           </div>
-          <CategoryManager />
           <DomainManager />
         </aside>
 

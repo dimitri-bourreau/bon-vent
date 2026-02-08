@@ -31,7 +31,9 @@ test.describe("Interactions page", () => {
   });
 
   test("adds new interaction", async ({ page }) => {
-    await page.locator("button", { hasText: "Sélectionner une entreprise" }).click();
+    await page
+      .locator("button", { hasText: "Sélectionner une entreprise" })
+      .click();
     await page.getByRole("option", { name: "Acme Corp" }).click();
 
     await page
@@ -41,18 +43,24 @@ test.describe("Interactions page", () => {
       .click();
     await page.getByRole("option", { name: /Email envoyé/ }).click();
 
-    await page.getByPlaceholder("Décrivez l'interaction...").fill("Sent follow-up email");
+    await page
+      .getByPlaceholder("Décrivez l'interaction...")
+      .fill("Sent follow-up email");
     await page.getByRole("button", { name: "Ajouter l'interaction" }).click();
 
     await expect(page.getByText("Sent follow-up email")).toBeVisible();
   });
 
   test("companies are sorted alphabetically in select", async ({ page }) => {
-    await page.locator("button", { hasText: "Sélectionner une entreprise" }).click();
+    await page
+      .locator("button", { hasText: "Sélectionner une entreprise" })
+      .click();
     const options = page.getByRole("option");
     const firstOption = await options.first().textContent();
     const secondOption = await options.nth(1).textContent();
 
-    expect(firstOption?.localeCompare(secondOption ?? "")).toBeLessThanOrEqual(0);
+    expect(firstOption?.localeCompare(secondOption ?? "")).toBeLessThanOrEqual(
+      0,
+    );
   });
 });

@@ -8,6 +8,7 @@ export function useDeleteCategory() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteCategory(categoryApiAdapter, id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["categories"] }),
   });
 }

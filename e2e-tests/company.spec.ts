@@ -18,7 +18,9 @@ test.describe("Company CRUD", () => {
     await page.getByRole("button", { name: "+ Ajouter" }).click();
     await page.getByLabel("Nom *").fill("Unique Test Corp");
     await page.getByRole("button", { name: "Ajouter" }).click();
-    await expect(page.locator("tr", { hasText: "Unique Test Corp" })).toBeVisible();
+    await expect(
+      page.locator("tr", { hasText: "Unique Test Corp" }),
+    ).toBeVisible();
   });
 
   test("creates company with categories", async ({ page }) => {

@@ -8,7 +8,8 @@ import type { AddTimelineEventDTO } from "@/features/companies/types/add-timelin
 export function useAddTimelineEvent() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (dto: AddTimelineEventDTO) => addTimelineEvent(companyApiAdapter, dto),
+    mutationFn: (dto: AddTimelineEventDTO) =>
+      addTimelineEvent(companyApiAdapter, dto),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["companies"] }),
   });
 }

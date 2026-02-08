@@ -8,7 +8,9 @@ import type { UpdateObjectiveDTO } from "@/features/objectives/types/update-obje
 export function useUpdateObjective() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (dto: UpdateObjectiveDTO) => updateObjective(objectiveApiAdapter, dto),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["objectives"] }),
+    mutationFn: (dto: UpdateObjectiveDTO) =>
+      updateObjective(objectiveApiAdapter, dto),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["objectives"] }),
   });
 }

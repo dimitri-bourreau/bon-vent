@@ -42,8 +42,7 @@ export function CalendarView({ onSelectCompany }: Props) {
     const map = new Map<string, CalendarEvent[]>();
     companies.forEach((c) => {
       const { contactedAt } = c;
-      const hasBeenContacted =
-        contactedAt && c.applicationStage !== "research";
+      const hasBeenContacted = contactedAt && c.applicationStage !== "research";
       if (hasBeenContacted) {
         const contactKey = format(new Date(contactedAt), "yyyy-MM-dd");
         const contactList = map.get(contactKey) || [];

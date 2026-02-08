@@ -8,7 +8,9 @@ import type { ObjectiveType } from "@/features/objectives/types/objective-type.t
 export function useDecrementObjective() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (type: ObjectiveType) => decrementObjective(objectiveApiAdapter, type),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["objectives"] }),
+    mutationFn: (type: ObjectiveType) =>
+      decrementObjective(objectiveApiAdapter, type),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["objectives"] }),
   });
 }

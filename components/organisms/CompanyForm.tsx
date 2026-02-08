@@ -243,9 +243,7 @@ export function CompanyForm({
             />
           </div>
 
-          {initialData && (
-            <CompanyTimeline companyId={initialData.id} />
-          )}
+          {initialData && <CompanyTimeline companyId={initialData.id} />}
 
           <Button type="submit" className="w-full">
             {initialData ? "Modifier" : "Ajouter"}

@@ -8,7 +8,8 @@ import type { UpdateCompanyDTO } from "@/features/companies/types/update-company
 export function useUpdateCompany() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (dto: UpdateCompanyDTO) => updateCompany(companyApiAdapter, dto),
+    mutationFn: (dto: UpdateCompanyDTO) =>
+      updateCompany(companyApiAdapter, dto),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["companies"] }),
   });
 }

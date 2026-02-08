@@ -8,7 +8,8 @@ import type { CreateInteractionDTO } from "@/features/interactions/types/create-
 export function useCreateInteraction() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (dto: CreateInteractionDTO) => createInteraction(interactionApiAdapter, dto),
+    mutationFn: (dto: CreateInteractionDTO) =>
+      createInteraction(interactionApiAdapter, dto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["interactions"] });
       queryClient.invalidateQueries({ queryKey: ["objectives"] });

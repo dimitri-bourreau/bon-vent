@@ -8,7 +8,9 @@ import type { UpdateCategoryDTO } from "@/features/categories/types/update-categ
 export function useUpdateCategory() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (dto: UpdateCategoryDTO) => updateCategory(categoryApiAdapter, dto),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
+    mutationFn: (dto: UpdateCategoryDTO) =>
+      updateCategory(categoryApiAdapter, dto),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["categories"] }),
   });
 }

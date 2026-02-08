@@ -9,10 +9,30 @@ import { cn } from "@/features/ui/cn";
 import { exportAllData, importAllData } from "@/features/db/export";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Tableau de bord", shortLabel: "Accueil", icon: "home" as const },
-  { href: "/favoris", label: "Favoris", shortLabel: "Favoris", icon: "heart" as const },
-  { href: "/contacts", label: "Contacts", shortLabel: "Contacts", icon: "users" as const },
-  { href: "/interactions", label: "Interactions", shortLabel: "Interactions", icon: "message" as const },
+  {
+    href: "/",
+    label: "Tableau de bord",
+    shortLabel: "Accueil",
+    icon: "home" as const,
+  },
+  {
+    href: "/favoris",
+    label: "Favoris",
+    shortLabel: "Favoris",
+    icon: "heart" as const,
+  },
+  {
+    href: "/contacts",
+    label: "Contacts",
+    shortLabel: "Contacts",
+    icon: "users" as const,
+  },
+  {
+    href: "/interactions",
+    label: "Interactions",
+    shortLabel: "Interactions",
+    icon: "message" as const,
+  },
 ];
 
 export function Navigation() {

@@ -8,7 +8,9 @@ import type { CreateCategoryDTO } from "@/features/categories/types/create-categ
 export function useCreateCategory() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (dto: CreateCategoryDTO) => createCategory(categoryApiAdapter, dto),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
+    mutationFn: (dto: CreateCategoryDTO) =>
+      createCategory(categoryApiAdapter, dto),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["categories"] }),
   });
 }

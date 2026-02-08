@@ -8,7 +8,8 @@ import type { CreateCompanyDTO } from "@/features/companies/types/create-company
 export function useCreateCompany() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (dto: CreateCompanyDTO) => createCompany(companyApiAdapter, dto),
+    mutationFn: (dto: CreateCompanyDTO) =>
+      createCompany(companyApiAdapter, dto),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["companies"] }),
   });
 }

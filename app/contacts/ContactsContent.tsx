@@ -7,7 +7,6 @@ import { PageHeader } from "@/components/molecules/PageHeader";
 import { StatsCard } from "@/components/molecules/StatsCard";
 import { ActivityChart } from "@/components/molecules/ActivityChart";
 import { CompanyList } from "@/components/organisms/CompanyList";
-import { FavoriteContactsList } from "@/components/organisms/FavoriteContactsList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryTabs } from "@/components/organisms/CategoryTabs";
 import {

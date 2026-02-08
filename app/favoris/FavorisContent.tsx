@@ -61,8 +61,9 @@ export function FavorisContent() {
             </Button>
           </div>
           <p className="text-sm text-muted-foreground">
-            Ces entreprises servent d'inspiration, même si vous ne postulez pas
-            activement. Elles vous aident à identifier vos centres d'intérêt.
+            Ces entreprises servent d&apos;inspiration, même si vous ne postulez
+            pas activement. Elles vous aident à identifier vos centres
+            d&apos;intérêt.
           </p>
           <CompanyList
             companies={filtered}

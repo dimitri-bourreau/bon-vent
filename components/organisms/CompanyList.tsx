@@ -42,6 +42,31 @@ interface Props {
   hideStatus?: boolean;
 }
 
+interface SortHeaderProps {
+  label: string;
+  column: string;
+  sortKey: string | null;
+  sortDir: "asc" | "desc";
+  onSort: (key: string) => void;
+}
+
+function SortHeader({ label, column, sortKey, sortDir, onSort }: SortHeaderProps) {
+  const isActive = sortKey === column;
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="-ml-3 h-8 font-medium"
+      onClick={() => onSort(column)}
+    >
+      {label}
+      <span className={`ml-1 ${isActive ? "" : "text-muted-foreground/50"}`}>
+        {isActive ? (sortDir === "asc" ? "↑" : "↓") : "↕"}
+      </span>
+    </Button>
+  );
+}
+
 export function CompanyList({
   companies,
   emptyMessage = "Aucune entreprise",
@@ -106,7 +131,9 @@ export function CompanyList({
       if (sortKey === "name") {
         cmp = a.name.localeCompare(b.name);
       } else if (sortKey === "stage") {
-        cmp = (a.applicationStage ?? "").localeCompare(b.applicationStage ?? "");
+        cmp = (a.applicationStage ?? "").localeCompare(
+          b.applicationStage ?? "",
+        );
       } else if (sortKey === "contact") {
         cmp = (a.contactName ?? "").localeCompare(b.contactName ?? "");
       } else if (sortKey === "contactedAt") {
@@ -115,23 +142,6 @@ export function CompanyList({
       return sortDir === "asc" ? cmp : -cmp;
     });
   }, [companies, sortKey, sortDir]);
-
-  const SortHeader = ({ label, column }: { label: string; column: string }) => {
-    const isActive = sortKey === column;
-    return (
-      <Button
-        variant="ghost"
-        size="sm"
-        className="-ml-3 h-8 font-medium"
-        onClick={() => handleSort(column)}
-      >
-        {label}
-        <span className={`ml-1 ${isActive ? "" : "text-muted-foreground/50"}`}>
-          {isActive ? (sortDir === "asc" ? "↑" : "↓") : "↕"}
-        </span>
-      </Button>
-    );
-  };
 
   if (companies.length === 0) {
     return (
@@ -168,19 +178,19 @@ export function CompanyList({
               )}
               <TableHead className="w-10"></TableHead>
               <TableHead>
-                <SortHeader label="Entreprise" column="name" />
+                <SortHeader label="Entreprise" column="name" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
               </TableHead>
               {!hideStatus && (
                 <TableHead>
-                  <SortHeader label="Statut" column="stage" />
+                  <SortHeader label="Statut" column="stage" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
                 </TableHead>
               )}
               <TableHead>Catégories</TableHead>
               <TableHead>
-                <SortHeader label="Contact" column="contact" />
+                <SortHeader label="Contact" column="contact" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
               </TableHead>
               <TableHead>
-                <SortHeader label="Contacté le" column="contactedAt" />
+                <SortHeader label="Contacté le" column="contactedAt" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
               </TableHead>
               <TableHead className="w-10"></TableHead>
             </TableRow>

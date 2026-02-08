@@ -41,7 +41,12 @@ export function InteractionsContent() {
     const events: {
       companyId: string;
       companyName: string;
-      event: { id: string; type: TimelineEventType; date: string; content: string };
+      event: {
+        id: string;
+        type: TimelineEventType;
+        date: string;
+        content: string;
+      };
     }[] = [];
 
     companies.forEach((c) => {
@@ -51,7 +56,8 @@ export function InteractionsContent() {
     });
 
     return events.sort(
-      (a, b) => new Date(b.event.date).getTime() - new Date(a.event.date).getTime()
+      (a, b) =>
+        new Date(b.event.date).getTime() - new Date(a.event.date).getTime(),
     );
   }, [companies]);
 
@@ -142,7 +148,7 @@ export function InteractionsContent() {
               </div>
 
               <Button type="submit" className="w-full">
-                Ajouter l'interaction
+                Ajouter l&apos;interaction
               </Button>
             </form>
           </div>

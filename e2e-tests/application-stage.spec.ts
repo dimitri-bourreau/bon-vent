@@ -14,13 +14,13 @@ test.describe("Application Stage", () => {
   });
 
   test("shows application stage selector in form", async ({ page }) => {
-    await page.getByText("Acme Corp").click();
+    await page.locator("tr", { hasText: "Acme Corp" }).click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await expect(page.getByRole("dialog").getByText("Statut")).toBeVisible();
   });
 
   test("changes application stage", async ({ page }) => {
-    await page.getByText("TechStart").click();
+    await page.locator("tr", { hasText: "TechStart" }).click();
     await page.locator("button", { hasText: "Recherche" }).click();
     await page.getByRole("option", { name: "Postulé" }).click();
     await page.getByRole("button", { name: "Modifier" }).click();

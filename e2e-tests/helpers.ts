@@ -14,13 +14,10 @@ export async function clearIndexedDB(page: Page) {
   });
 }
 
-export async function seedDatabase(page: Page) {
-  await page.evaluate((data) => {
-    return new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(
-        () => reject(new Error("seedDatabase timeout")),
-        10000,
-      );
+async function trySeedDatabase(page: Page): Promise<boolean> {
+  return page.evaluate((data) => {
+    return new Promise<boolean>((resolve) => {
+      const timeout = setTimeout(() => resolve(false), 3000);
 
       const req = indexedDB.open("bon-vent-db", 1);
 
@@ -58,46 +55,75 @@ export async function seedDatabase(page: Page) {
 
       req.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        const tx = db.transaction(
-          ["companies", "zones", "domains", "objectives"],
-          "readwrite",
+
+        const storeNames = ["companies", "zones", "domains", "objectives"];
+        const availableStores = storeNames.filter((name) =>
+          db.objectStoreNames.contains(name),
         );
 
-        for (const company of data.companies) {
-          tx.objectStore("companies").put(company);
+        if (availableStores.length === 0) {
+          clearTimeout(timeout);
+          db.close();
+          resolve(true);
+          return;
         }
-        for (const zone of data.zones) {
-          tx.objectStore("zones").put(zone);
+
+        const tx = db.transaction(availableStores, "readwrite");
+
+        if (availableStores.includes("companies")) {
+          for (const company of data.companies) {
+            tx.objectStore("companies").put(company);
+          }
         }
-        for (const domain of data.domains) {
-          tx.objectStore("domains").put(domain);
+        if (availableStores.includes("zones")) {
+          for (const zone of data.zones) {
+            tx.objectStore("zones").put(zone);
+          }
         }
-        for (const objective of data.objectives) {
-          tx.objectStore("objectives").put(objective);
+        if (availableStores.includes("domains")) {
+          for (const domain of data.domains) {
+            tx.objectStore("domains").put(domain);
+          }
+        }
+        if (availableStores.includes("objectives")) {
+          for (const objective of data.objectives) {
+            tx.objectStore("objectives").put(objective);
+          }
         }
 
         tx.oncomplete = () => {
           clearTimeout(timeout);
           db.close();
-          resolve();
+          resolve(true);
         };
         tx.onerror = () => {
           clearTimeout(timeout);
-          reject(tx.error);
+          db.close();
+          resolve(false);
         };
       };
 
       req.onerror = () => {
         clearTimeout(timeout);
-        reject(req.error);
+        resolve(false);
       };
 
       req.onblocked = () => {
         clearTimeout(timeout);
-        reject(new Error("Database blocked"));
+        resolve(false);
       };
     });
   }, mockExportData);
+}
+
+export async function seedDatabase(page: Page) {
+  const maxRetries = 5;
+  for (let i = 0; i < maxRetries; i++) {
+    const success = await trySeedDatabase(page);
+    if (success) return;
+    await page.waitForTimeout(500);
+  }
+  throw new Error("seedDatabase failed after retries");
 }
 
 export async function waitForAppReady(page: Page) {

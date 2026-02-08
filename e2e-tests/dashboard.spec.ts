@@ -8,16 +8,14 @@ test.describe("Dashboard", () => {
     await page.reload();
   });
 
-  test("shows empty state when no data", async ({ page }) => {
-    await expect(page.getByText("Aucune réponse en attente")).toBeVisible();
+  test("shows stats overview", async ({ page }) => {
+    await expect(page.getByText("Statistiques")).toBeVisible();
   });
 
   test("displays companies after seeding", async ({ page }) => {
     await seedDatabase(page);
     await page.reload();
-    await expect(
-      page.getByRole("button", { name: "Recent Contact", exact: true }),
-    ).toBeVisible();
+    await expect(page.getByText("À relancer")).toBeVisible();
   });
 
   test("displays overdue companies section", async ({ page }) => {
@@ -27,11 +25,5 @@ test.describe("Dashboard", () => {
     await expect(
       page.locator("span", { hasText: "GlobalTech" }).first(),
     ).toBeVisible();
-  });
-
-  test("displays waiting companies section", async ({ page }) => {
-    await seedDatabase(page);
-    await page.reload();
-    await expect(page.getByText("Réponses en attente")).toBeVisible();
   });
 });

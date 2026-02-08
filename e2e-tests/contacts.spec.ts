@@ -14,17 +14,10 @@ test.describe("Contacts page", () => {
     await expect(page.getByText("Recent Contact")).toBeVisible();
   });
 
-  test("shows favorite contacts section", async ({ page }) => {
-    await expect(page.getByText("Contacts favoris")).toBeVisible();
-    await expect(page.getByText("Dream Company")).toBeVisible();
-  });
-
-  test("toggles favorite on contact", async ({ page }) => {
-    const row = page.locator("tr", { hasText: "Recent Contact" });
-    await row.getByRole("button", { name: "☆" }).click();
-    await page.waitForTimeout(500);
-
-    await expect(page.getByText("Contacts favoris (2)")).toBeVisible();
+  test("displays stats cards", async ({ page }) => {
+    await expect(page.locator("aside")).toContainText("Contactées");
+    await expect(page.locator("aside")).toContainText("En attente");
+    await expect(page.locator("aside")).toContainText("À relancer");
   });
 
   test("creates contacted company with date", async ({ page }) => {

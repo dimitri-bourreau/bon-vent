@@ -9,14 +9,16 @@ test.describe("Company CRUD", () => {
   });
 
   test("shows empty state when no data", async ({ page }) => {
-    await expect(page.getByText("Aucun favori pour le moment")).toBeVisible();
+    await expect(
+      page.getByText("Ajoutez des entreprises qui vous inspirent"),
+    ).toBeVisible();
   });
 
   test("creates a new company", async ({ page }) => {
     await page.getByRole("button", { name: "+ Ajouter" }).click();
-    await page.getByLabel("Nom *").fill("New Company");
+    await page.getByLabel("Nom *").fill("Unique Test Corp");
     await page.getByRole("button", { name: "Ajouter" }).click();
-    await expect(page.getByText("New Company")).toBeVisible();
+    await expect(page.locator("tr", { hasText: "Unique Test Corp" })).toBeVisible();
   });
 
   test("creates company with categories", async ({ page }) => {
@@ -38,7 +40,7 @@ test.describe("Company CRUD", () => {
     await seedDatabase(page);
     await page.reload();
 
-    await page.getByText("Acme Corp").click();
+    await page.locator("tr", { hasText: "Acme Corp" }).click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await expect(page.getByLabel("Nom *")).toHaveValue("Acme Corp");
 

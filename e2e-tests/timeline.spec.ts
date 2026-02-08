@@ -10,7 +10,7 @@ test.describe("Timeline", () => {
   });
 
   test("displays timeline section in company form", async ({ page }) => {
-    await page.getByText("Acme Corp").click();
+    await page.locator("tr", { hasText: "Acme Corp" }).click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Historique" }),
@@ -20,7 +20,7 @@ test.describe("Timeline", () => {
   test("shows existing timeline events", async ({ page }) => {
     await page.goto("/contacts");
     await page.reload();
-    await page.getByText("BigBank Inc").click();
+    await page.locator("tr", { hasText: "BigBank Inc" }).click();
     await expect(page.getByText("Sent application email")).toBeVisible();
   });
 

@@ -22,7 +22,7 @@ test.describe("Export and Import", () => {
     await clearIndexedDB(page);
     await page.reload();
 
-    await expect(page.getByText("Aucune réponse en attente")).toBeVisible();
+    await expect(page.getByText("Statistiques")).toBeVisible();
 
     const fileChooserPromise = page.waitForEvent("filechooser");
     await page.getByTitle("Importer").click();

@@ -9,9 +9,17 @@ import { cn } from "@/features/ui/cn";
 import { exportAllData, importAllData } from "@/features/db/export";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Accueil", icon: "home" as const },
-  { href: "/favoris", label: "Rêves", icon: "heart" as const },
-  { href: "/contacts", label: "Contactées", icon: "users" as const },
+  { href: "/", label: "Tableau de bord", icon: "home" as const },
+  {
+    href: "/favoris",
+    label: "Entreprises pour lesquelles j'adorerais travailler",
+    icon: "heart" as const,
+  },
+  {
+    href: "/contacts",
+    label: "Entreprises contactées",
+    icon: "users" as const,
+  },
 ];
 
 export function Navigation() {
@@ -43,7 +51,7 @@ export function Navigation() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-card/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4">
+      <div className="mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
@@ -52,7 +60,7 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-1 rounded-xl px-4 py-2 transition-all duration-200",
+                  "flex items-center gap-2 rounded-xl px-4 py-2 transition-all duration-200",
                   isActive
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -62,7 +70,7 @@ export function Navigation() {
                   icon={item.icon}
                   className={cn("h-5 w-5", isActive && "stroke-2")}
                 />
-                <span className="text-xs font-medium">{item.label}</span>
+                <span className="text-sm font-medium">{item.label}</span>
               </Link>
             );
           })}
@@ -73,8 +81,18 @@ export function Navigation() {
             className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
             title="Exporter"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+              />
             </svg>
           </button>
           <button
@@ -82,8 +100,18 @@ export function Navigation() {
             className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
             title="Importer"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
             </svg>
           </button>
           <input

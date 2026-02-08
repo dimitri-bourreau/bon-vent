@@ -99,17 +99,6 @@ export default function HomePage() {
               />
             </section>
           )}
-
-          <section className="flex-1">
-            <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-              <span className="h-2 w-2 rounded-full bg-chart-2" />
-              Réponses en attente ({waiting.length})
-            </h2>
-            <CompanyList
-              companies={waiting}
-              emptyMessage="Aucune réponse en attente"
-            />
-          </section>
         </div>
       </div>
 

@@ -10,7 +10,7 @@ import { useCreateInteraction } from "@/hooks/use-create-interaction.hook";
 import type { ObjectiveType } from "@/features/objectives/types/objective-type.type";
 
 export function ObjectiveTracker() {
-  const { data: objectives = [] } = useObjectives();
+  const { data: objectives = [], isLoading } = useObjectives();
   const incrementObjective = useIncrementObjective();
   const decrementObjective = useDecrementObjective();
   const createInteraction = useCreateInteraction();
@@ -64,7 +64,7 @@ export function ObjectiveTracker() {
             onDecrement={() => handleDecrement(objective.type)}
           />
         ))}
-        {objectives.length === 0 && (
+        {isLoading && (
           <div className="flex items-center justify-center py-4">
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>

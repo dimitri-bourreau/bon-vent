@@ -12,12 +12,12 @@ const NAV_ITEMS = [
   { href: "/", label: "Tableau de bord", icon: "home" as const },
   {
     href: "/favoris",
-    label: "Entreprises pour lesquelles j'adorerais travailler",
+    label: "Favoris",
     icon: "heart" as const,
   },
   {
     href: "/contacts",
-    label: "Entreprises contactées",
+    label: "Contacts",
     icon: "users" as const,
   },
 ];

@@ -26,12 +26,9 @@ export function ContactsContent() {
   const { data: waiting = [] } = useWaiting();
   const createCompany = useCreateCompany();
 
-  const favoriteContacts = contacted.filter((c) => c.isFavorite);
-  const nonFavoriteContacts = contacted.filter((c) => !c.isFavorite);
-
   const filtered = category
-    ? nonFavoriteContacts.filter((c) => c.categories.includes(category))
-    : nonFavoriteContacts;
+    ? contacted.filter((c) => c.categories.includes(category))
+    : contacted;
 
   const sorted = [...filtered].sort((a, b) => {
     if (!a.contactedAt || !b.contactedAt) return 0;
@@ -94,9 +91,6 @@ export function ContactsContent() {
         </aside>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">
-          {favoriteContacts.length > 0 && (
-            <FavoriteContactsList companies={favoriteContacts} />
-          )}
           <div className="flex items-center justify-between">
             <CategoryTabs />
             <Button onClick={() => setShowForm(true)} size="sm">

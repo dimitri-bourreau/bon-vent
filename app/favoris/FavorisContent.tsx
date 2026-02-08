@@ -37,8 +37,8 @@ export function FavorisContent() {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <PageHeader
-        title="Entreprises pour lesquelles j'adorerais travailler"
-        subtitle="Vos entreprises de rêve"
+        title="Entreprises inspirantes"
+        subtitle="Des entreprises que j'admire pour guider ma recherche"
       />
 
       <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr] px-8">
@@ -60,12 +60,16 @@ export function FavorisContent() {
               + Ajouter
             </Button>
           </div>
+          <p className="text-sm text-muted-foreground">
+            Ces entreprises servent d'inspiration, même si vous ne postulez pas
+            activement. Elles vous aident à identifier vos centres d'intérêt.
+          </p>
           <CompanyList
             companies={filtered}
             emptyMessage={
               category
-                ? `Aucun favori dans "${category}"`
-                : "Aucun favori pour le moment"
+                ? `Aucune inspiration dans "${category}"`
+                : "Ajoutez des entreprises qui vous inspirent"
             }
           />
         </div>

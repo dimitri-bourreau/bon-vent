@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -39,17 +39,21 @@ interface Props {
   companies: Company[];
   emptyMessage?: string;
   showBulkActions?: boolean;
+  hideStatus?: boolean;
 }
 
 export function CompanyList({
   companies,
   emptyMessage = "Aucune entreprise",
   showBulkActions = false,
+  hideStatus = false,
 }: Props) {
   const [editCompany, setEditCompany] = useState<Company | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showBulkDelete, setShowBulkDelete] = useState(false);
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const updateCompany = useUpdateCompany();
   const deleteCompany = useDeleteCompany();
@@ -86,6 +90,49 @@ export function CompanyList({
     else setSelected(new Set(companies.map((c) => c.id)));
   };
 
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const sortedCompanies = useMemo(() => {
+    if (!sortKey) return companies;
+    return [...companies].sort((a, b) => {
+      let cmp = 0;
+      if (sortKey === "name") {
+        cmp = a.name.localeCompare(b.name);
+      } else if (sortKey === "stage") {
+        cmp = (a.applicationStage ?? "").localeCompare(b.applicationStage ?? "");
+      } else if (sortKey === "contact") {
+        cmp = (a.contactName ?? "").localeCompare(b.contactName ?? "");
+      } else if (sortKey === "contactedAt") {
+        cmp = (a.contactedAt ?? "").localeCompare(b.contactedAt ?? "");
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+  }, [companies, sortKey, sortDir]);
+
+  const SortHeader = ({ label, column }: { label: string; column: string }) => {
+    const isActive = sortKey === column;
+    return (
+      <Button
+        variant="ghost"
+        size="sm"
+        className="-ml-3 h-8 font-medium"
+        onClick={() => handleSort(column)}
+      >
+        {label}
+        <span className={`ml-1 ${isActive ? "" : "text-muted-foreground/50"}`}>
+          {isActive ? (sortDir === "asc" ? "↑" : "↓") : "↕"}
+        </span>
+      </Button>
+    );
+  };
+
   if (companies.length === 0) {
     return (
       <p className="py-8 text-center text-muted-foreground">{emptyMessage}</p>
@@ -120,16 +167,26 @@ export function CompanyList({
                 </TableHead>
               )}
               <TableHead className="w-10"></TableHead>
-              <TableHead>Entreprise</TableHead>
-              <TableHead>Statut</TableHead>
+              <TableHead>
+                <SortHeader label="Entreprise" column="name" />
+              </TableHead>
+              {!hideStatus && (
+                <TableHead>
+                  <SortHeader label="Statut" column="stage" />
+                </TableHead>
+              )}
               <TableHead>Catégories</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead>Contacté le</TableHead>
+              <TableHead>
+                <SortHeader label="Contact" column="contact" />
+              </TableHead>
+              <TableHead>
+                <SortHeader label="Contacté le" column="contactedAt" />
+              </TableHead>
               <TableHead className="w-10"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {companies.map((company) => (
+            {sortedCompanies.map((company) => (
               <TableRow
                 key={company.id}
                 className="cursor-pointer hover:bg-muted/50"
@@ -146,7 +203,7 @@ export function CompanyList({
                 <TableCell onClick={(e) => e.stopPropagation()}>
                   <button
                     onClick={() => toggleFavorite.mutate(company.id)}
-                    className="text-lg"
+                    className={`text-lg ${company.isFavorite ? "text-yellow-500" : "text-muted-foreground"}`}
                   >
                     {company.isFavorite ? "★" : "☆"}
                   </button>
@@ -185,9 +242,11 @@ export function CompanyList({
                     </p>
                   )}
                 </TableCell>
-                <TableCell>
-                  <ApplicationStageBadge stage={company.applicationStage} />
-                </TableCell>
+                {!hideStatus && (
+                  <TableCell>
+                    <ApplicationStageBadge stage={company.applicationStage} />
+                  </TableCell>
+                )}
                 <TableCell className="text-sm">
                   {company.categories.length > 0
                     ? company.categories.join(", ")

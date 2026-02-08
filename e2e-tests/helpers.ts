@@ -7,7 +7,9 @@ export async function clearIndexedDB(page: Page) {
       const req = indexedDB.deleteDatabase("bon-vent-db");
       req.onsuccess = () => resolve();
       req.onerror = () => resolve();
-      req.onblocked = () => resolve();
+      req.onblocked = () => {
+        setTimeout(() => resolve(), 100);
+      };
     });
   });
 }
@@ -15,29 +17,42 @@ export async function clearIndexedDB(page: Page) {
 export async function seedDatabase(page: Page) {
   await page.evaluate((data) => {
     return new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error("seedDatabase timeout")), 10000);
+
       const req = indexedDB.open("bon-vent-db", 1);
+
       req.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
 
-        const companyStore = db.createObjectStore("companies", { keyPath: "id" });
-        companyStore.createIndex("by-status", "status");
-        companyStore.createIndex("by-favorite", "isFavorite");
-
-        const zoneStore = db.createObjectStore("zones", { keyPath: "id" });
-        zoneStore.createIndex("by-order", "order");
-
-        const domainStore = db.createObjectStore("domains", { keyPath: "id" });
-        domainStore.createIndex("by-order", "order");
-
-        const objectiveStore = db.createObjectStore("objectives", { keyPath: "id" });
-        objectiveStore.createIndex("by-type", "type");
-        objectiveStore.createIndex("by-week", "weekStart");
-
-        db.createObjectStore("interactions", { keyPath: "id" });
+        if (!db.objectStoreNames.contains("companies")) {
+          const companyStore = db.createObjectStore("companies", { keyPath: "id" });
+          companyStore.createIndex("by-status", "status");
+          companyStore.createIndex("by-favorite", "isFavorite");
+        }
+        if (!db.objectStoreNames.contains("zones")) {
+          const zoneStore = db.createObjectStore("zones", { keyPath: "id" });
+          zoneStore.createIndex("by-order", "order");
+        }
+        if (!db.objectStoreNames.contains("domains")) {
+          const domainStore = db.createObjectStore("domains", { keyPath: "id" });
+          domainStore.createIndex("by-order", "order");
+        }
+        if (!db.objectStoreNames.contains("objectives")) {
+          const objectiveStore = db.createObjectStore("objectives", { keyPath: "id" });
+          objectiveStore.createIndex("by-type", "type");
+          objectiveStore.createIndex("by-week", "weekStart");
+        }
+        if (!db.objectStoreNames.contains("interactions")) {
+          db.createObjectStore("interactions", { keyPath: "id" });
+        }
       };
+
       req.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        const tx = db.transaction(["companies", "zones", "domains", "objectives"], "readwrite");
+        const tx = db.transaction(
+          ["companies", "zones", "domains", "objectives"],
+          "readwrite",
+        );
 
         for (const company of data.companies) {
           tx.objectStore("companies").put(company);
@@ -53,12 +68,25 @@ export async function seedDatabase(page: Page) {
         }
 
         tx.oncomplete = () => {
+          clearTimeout(timeout);
           db.close();
           resolve();
         };
-        tx.onerror = () => reject(tx.error);
+        tx.onerror = () => {
+          clearTimeout(timeout);
+          reject(tx.error);
+        };
       };
-      req.onerror = () => reject(req.error);
+
+      req.onerror = () => {
+        clearTimeout(timeout);
+        reject(req.error);
+      };
+
+      req.onblocked = () => {
+        clearTimeout(timeout);
+        reject(new Error("Database blocked"));
+      };
     });
   }, mockExportData);
 }

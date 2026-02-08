@@ -15,7 +15,9 @@ test.describe("Dashboard", () => {
   test("displays companies after seeding", async ({ page }) => {
     await seedDatabase(page);
     await page.reload();
-    await expect(page.getByText("Recent Contact")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Recent Contact", exact: true }),
+    ).toBeVisible();
   });
 
   test("displays overdue companies section", async ({ page }) => {

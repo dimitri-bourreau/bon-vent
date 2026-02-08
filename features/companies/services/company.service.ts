@@ -1,5 +1,10 @@
 import type { CompanyRepository } from "../ports/company.port";
-import type { CreateCompanyDTO, UpdateCompanyDTO } from "../domain/types";
+import type {
+  CreateCompanyDTO,
+  UpdateCompanyDTO,
+  AddTimelineEventDTO,
+  ApplicationStage,
+} from "../domain/types";
 
 export function createCompanyService(repository: CompanyRepository) {
   return {
@@ -10,9 +15,14 @@ export function createCompanyService(repository: CompanyRepository) {
     getContacted: () => repository.getContacted(),
     getOverdue: (days = 7) => repository.getOverdue(days),
     getWaiting: () => repository.getWaiting(),
+    search: (query: string) => repository.search(query),
+    findDuplicates: (name: string) => repository.findDuplicates(name),
     create: (dto: CreateCompanyDTO) => repository.create(dto),
     update: (dto: UpdateCompanyDTO) => repository.update(dto),
+    addTimelineEvent: (dto: AddTimelineEventDTO) =>
+      repository.addTimelineEvent(dto),
     delete: (id: string) => repository.delete(id),
+    deleteMany: (ids: string[]) => repository.deleteMany(ids),
 
     markAsContacted: (id: string) =>
       repository.update({
@@ -26,6 +36,9 @@ export function createCompanyService(repository: CompanyRepository) {
       if (!company) throw new Error("Company not found");
       return repository.update({ id, isFavorite: !company.isFavorite });
     },
+
+    updateApplicationStage: (id: string, stage: ApplicationStage) =>
+      repository.update({ id, applicationStage: stage }),
   };
 }
 

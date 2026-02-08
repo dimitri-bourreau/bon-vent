@@ -38,6 +38,8 @@ test.describe("Export and Import", () => {
     await page.waitForTimeout(1000);
     await page.reload();
 
-    await expect(page.getByText("Recent Contact")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Recent Contact", exact: true }),
+    ).toBeVisible();
   });
 });

@@ -1,19 +1,24 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/molecules/PageHeader";
-import { StatsCard } from "@/components/molecules/StatsCard";
+import { SearchBar } from "@/components/molecules/SearchBar";
 import { ActivityChart } from "@/components/molecules/ActivityChart";
 import { CompanyList } from "@/components/organisms/CompanyList";
+import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { ObjectiveTracker } from "@/components/organisms/ObjectiveTracker";
 import { CategoryManager } from "@/components/organisms/CategoryManager";
+import { StatsOverview } from "@/components/organisms/StatsOverview";
+import { CalendarView } from "@/components/organisms/CalendarView";
 import {
   useCompanies,
   useOverdue,
   useWaiting,
   useFavorites,
+  useUpdateCompany,
 } from "@/features/companies/hooks/useCompanies";
 import { useZones } from "@/features/zones/hooks/useZones";
+import type { Company, CreateCompanyDTO } from "@/features/companies/domain/types";
 
 export default function HomePage() {
   const { data: companies = [] } = useCompanies();
@@ -21,6 +26,9 @@ export default function HomePage() {
   const { data: waiting = [] } = useWaiting();
   const { data: favorites = [] } = useFavorites();
   const { data: categories = [] } = useZones();
+  const updateCompany = useUpdateCompany();
+
+  const [editCompany, setEditCompany] = useState<Company | null>(null);
 
   const contacted = companies.filter((c) => c.contactedAt);
 
@@ -43,15 +51,24 @@ export default function HomePage() {
     [favorites.length, contacted.length, waiting.length, overdue.length],
   );
 
+  const handleUpdate = (data: CreateCompanyDTO) => {
+    if (!editCompany) return;
+    updateCompany.mutate({ id: editCompany.id, ...data });
+    setEditCompany(null);
+  };
+
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <PageHeader
         title="Tableau de bord"
         subtitle="Vue d'ensemble de votre prospection"
-      />
+      >
+        <SearchBar onSelect={setEditCompany} />
+      </PageHeader>
 
-      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr] px-8">
+      <div className="grid min-h-0 flex-1 gap-6 px-8 lg:grid-cols-[320px_1fr]">
         <aside className="flex flex-col gap-4">
+          <StatsOverview />
           <ObjectiveTracker />
           <ActivityChart data={statusData} type="donut" />
           {categoryData.length > 0 && (
@@ -65,6 +82,8 @@ export default function HomePage() {
         </aside>
 
         <div className="flex min-h-0 flex-col gap-6 overflow-auto">
+          <CalendarView onSelectCompany={setEditCompany} />
+
           {overdue.length > 0 && (
             <section>
               <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
@@ -90,6 +109,13 @@ export default function HomePage() {
           </section>
         </div>
       </div>
+
+      <CompanyForm
+        open={!!editCompany}
+        onOpenChange={(open) => !open && setEditCompany(null)}
+        onSubmit={handleUpdate}
+        initialData={editCompany ?? undefined}
+      />
     </div>
   );
 }

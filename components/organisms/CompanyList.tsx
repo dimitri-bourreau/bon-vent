@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -11,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
+import { ApplicationStageBadge } from "@/components/molecules/ApplicationStageSelect";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,6 +27,7 @@ import { formatRelative } from "@/features/dates/dates";
 import {
   useUpdateCompany,
   useDeleteCompany,
+  useDeleteManyCompanies,
   useToggleFavorite,
 } from "@/features/companies/hooks/useCompanies";
 import type {
@@ -35,17 +38,22 @@ import type {
 interface Props {
   companies: Company[];
   emptyMessage?: string;
+  showBulkActions?: boolean;
 }
 
 export function CompanyList({
   companies,
   emptyMessage = "Aucune entreprise",
+  showBulkActions = false,
 }: Props) {
   const [editCompany, setEditCompany] = useState<Company | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
 
   const updateCompany = useUpdateCompany();
   const deleteCompany = useDeleteCompany();
+  const deleteManyCompanies = useDeleteManyCompanies();
   const toggleFavorite = useToggleFavorite();
 
   const handleUpdate = (data: CreateCompanyDTO) => {
@@ -60,6 +68,24 @@ export function CompanyList({
     setDeleteId(null);
   };
 
+  const handleBulkDelete = () => {
+    deleteManyCompanies.mutate([...selected]);
+    setSelected(new Set());
+    setShowBulkDelete(false);
+  };
+
+  const toggleSelect = (id: string) => {
+    const next = new Set(selected);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelected(next);
+  };
+
+  const toggleAll = () => {
+    if (selected.size === companies.length) setSelected(new Set());
+    else setSelected(new Set(companies.map((c) => c.id)));
+  };
+
   if (companies.length === 0) {
     return (
       <p className="py-8 text-center text-muted-foreground">{emptyMessage}</p>
@@ -68,12 +94,34 @@ export function CompanyList({
 
   return (
     <>
-      <div className="rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden">
+      {showBulkActions && selected.size > 0 && (
+        <div className="mb-2 flex items-center gap-2 rounded-md bg-muted p-2">
+          <span className="text-sm">{selected.size} sélectionné(s)</span>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => setShowBulkDelete(true)}
+          >
+            Supprimer
+          </Button>
+        </div>
+      )}
+
+      <div className="overflow-hidden rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm">
         <Table>
           <TableHeader>
             <TableRow>
+              {showBulkActions && (
+                <TableHead className="w-10">
+                  <Checkbox
+                    checked={selected.size === companies.length}
+                    onCheckedChange={toggleAll}
+                  />
+                </TableHead>
+              )}
               <TableHead className="w-10"></TableHead>
               <TableHead>Entreprise</TableHead>
+              <TableHead>Statut</TableHead>
               <TableHead>Catégories</TableHead>
               <TableHead>Contact</TableHead>
               <TableHead>Contacté le</TableHead>
@@ -87,6 +135,14 @@ export function CompanyList({
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() => setEditCompany(company)}
               >
+                {showBulkActions && (
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      checked={selected.has(company.id)}
+                      onCheckedChange={() => toggleSelect(company.id)}
+                    />
+                  </TableCell>
+                )}
                 <TableCell onClick={(e) => e.stopPropagation()}>
                   <button
                     onClick={() => toggleFavorite.mutate(company.id)}
@@ -105,16 +161,32 @@ export function CompanyList({
                         rel="noopener noreferrer"
                         className="text-xs text-primary hover:underline"
                         onClick={(e) => e.stopPropagation()}
+                        title="Site web"
                       >
                         ↗
                       </a>
                     )}
+                    {company.jobUrl && (
+                      <a
+                        href={company.jobUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-green-600 hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                        title="Offre d'emploi"
+                      >
+                        📋
+                      </a>
+                    )}
                   </div>
                   {company.note && (
-                    <p className="text-xs text-muted-foreground truncate max-w-50">
+                    <p className="max-w-50 truncate text-xs text-muted-foreground">
                       {company.note}
                     </p>
                   )}
+                </TableCell>
+                <TableCell>
+                  <ApplicationStageBadge stage={company.applicationStage} />
                 </TableCell>
                 <TableCell className="text-sm">
                   {company.categories.length > 0
@@ -177,6 +249,25 @@ export function CompanyList({
           <AlertDialogFooter>
             <AlertDialogCancel>Annuler</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showBulkDelete} onOpenChange={setShowBulkDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Supprimer {selected.size} entreprise(s) ?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action est irréversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={handleBulkDelete}>
               Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>

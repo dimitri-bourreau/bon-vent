@@ -6,6 +6,7 @@ import type {
   Company,
   CreateCompanyDTO,
   UpdateCompanyDTO,
+  AddTimelineEventDTO,
 } from "../domain/types";
 
 export class CompanyIndexedDBAdapter implements CompanyRepository {
@@ -57,6 +58,31 @@ export class CompanyIndexedDBAdapter implements CompanyRepository {
     );
   }
 
+  async search(query: string): Promise<Company[]> {
+    const all = await this.getAll();
+    const q = query.toLowerCase();
+    return all.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.note?.toLowerCase().includes(q) ||
+        c.contactName?.toLowerCase().includes(q) ||
+        c.categories.some((cat) => cat.toLowerCase().includes(q)),
+    );
+  }
+
+  async findDuplicates(name: string): Promise<Company[]> {
+    const all = await this.getAll();
+    const normalized = name.toLowerCase().trim();
+    return all.filter((c) => {
+      const cName = c.name.toLowerCase().trim();
+      return (
+        cName === normalized ||
+        cName.includes(normalized) ||
+        normalized.includes(cName)
+      );
+    });
+  }
+
   async create(dto: CreateCompanyDTO): Promise<Company> {
     const db = await getDB();
     const now = new Date().toISOString();
@@ -65,10 +91,13 @@ export class CompanyIndexedDBAdapter implements CompanyRepository {
       name: dto.name,
       categories: dto.categories,
       website: dto.website,
+      jobUrl: dto.jobUrl,
       contactEmail: dto.contactEmail,
       contactName: dto.contactName,
       note: dto.note,
       status: dto.status ?? "favorite",
+      applicationStage: dto.applicationStage ?? "research",
+      timeline: [],
       isFavorite: dto.isFavorite ?? true,
       contactedAt: dto.contactedAt,
       createdAt: now,
@@ -92,9 +121,38 @@ export class CompanyIndexedDBAdapter implements CompanyRepository {
     return updated;
   }
 
+  async addTimelineEvent(dto: AddTimelineEventDTO): Promise<Company> {
+    const db = await getDB();
+    const existing = await this.getById(dto.companyId);
+    if (!existing) throw new Error("Company not found");
+
+    const event = {
+      id: uuid(),
+      type: dto.type,
+      date: new Date().toISOString(),
+      content: dto.content,
+    };
+
+    const updated: Company = {
+      ...existing,
+      timeline: [...existing.timeline, event],
+      lastInteractionAt: event.date,
+      updatedAt: event.date,
+    };
+    await db.put("companies", updated);
+    return updated;
+  }
+
   async delete(id: string): Promise<void> {
     const db = await getDB();
     await db.delete("companies", id);
+  }
+
+  async deleteMany(ids: string[]): Promise<void> {
+    const db = await getDB();
+    const tx = db.transaction("companies", "readwrite");
+    await Promise.all(ids.map((id) => tx.store.delete(id)));
+    await tx.done;
   }
 }
 

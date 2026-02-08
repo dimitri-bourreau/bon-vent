@@ -3,9 +3,10 @@ import { Logo } from "@/components/atoms/Logo";
 interface Props {
   title?: string;
   subtitle?: string;
+  children?: React.ReactNode;
 }
 
-export function PageHeader({ title, subtitle }: Props) {
+export function PageHeader({ title, subtitle, children }: Props) {
   return (
     <header className="relative w-full overflow-hidden bg-gradient-to-r from-white/90 via-chart-2/5 to-primary/50 p-4">
       <div className="absolute inset-0 overflow-hidden">
@@ -30,6 +31,7 @@ export function PageHeader({ title, subtitle }: Props) {
             )}
           </div>
         )}
+        {children && <div className="ml-auto">{children}</div>}
       </div>
     </header>
   );

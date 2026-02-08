@@ -1,4 +1,8 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+import type {
+  ApplicationStage,
+  TimelineEvent,
+} from "@/features/companies/domain/types";
 
 export interface BonVentDB extends DBSchema {
   companies: {
@@ -8,10 +12,13 @@ export interface BonVentDB extends DBSchema {
       name: string;
       categories: string[];
       website?: string;
+      jobUrl?: string;
       contactEmail?: string;
       contactName?: string;
       note?: string;
       status: "favorite" | "contacted" | "waiting" | "follow_up";
+      applicationStage: ApplicationStage;
+      timeline: TimelineEvent[];
       contactedAt?: string;
       lastInteractionAt?: string;
       isFavorite: boolean;
@@ -27,17 +34,34 @@ export interface BonVentDB extends DBSchema {
   };
   domains: {
     key: string;
-    value: { id: string; name: string; color: string; order: number; createdAt: string };
+    value: {
+      id: string;
+      name: string;
+      color: string;
+      order: number;
+      createdAt: string;
+    };
     indexes: { "by-order": number };
   };
   objectives: {
     key: string;
-    value: { id: string; type: "comment" | "contact" | "message"; target: number; current: number; weekStart: string };
+    value: {
+      id: string;
+      type: "comment" | "contact" | "message";
+      target: number;
+      current: number;
+      weekStart: string;
+    };
     indexes: { "by-type": string; "by-week": string };
   };
   interactions: {
     key: string;
-    value: { id: string; type: "comment" | "contact" | "message"; date: string; note?: string };
+    value: {
+      id: string;
+      type: "comment" | "contact" | "message";
+      date: string;
+      note?: string;
+    };
     indexes: { "by-type": string; "by-date": string };
   };
 }
@@ -62,11 +86,15 @@ export async function getDB(): Promise<IDBPDatabase<BonVentDB>> {
       const domainStore = db.createObjectStore("domains", { keyPath: "id" });
       domainStore.createIndex("by-order", "order");
 
-      const objectiveStore = db.createObjectStore("objectives", { keyPath: "id" });
+      const objectiveStore = db.createObjectStore("objectives", {
+        keyPath: "id",
+      });
       objectiveStore.createIndex("by-type", "type");
       objectiveStore.createIndex("by-week", "weekStart");
 
-      const interactionStore = db.createObjectStore("interactions", { keyPath: "id" });
+      const interactionStore = db.createObjectStore("interactions", {
+        keyPath: "id",
+      });
       interactionStore.createIndex("by-type", "type");
       interactionStore.createIndex("by-date", "date");
     },

@@ -12,10 +12,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ApplicationStageSelect } from "@/components/molecules/ApplicationStageSelect";
+import { DuplicateWarning } from "@/components/molecules/DuplicateWarning";
+import { CompanyTimeline } from "@/components/molecules/CompanyTimeline";
 import { useZones, useCreateZone } from "@/features/zones/hooks/useZones";
 import type {
   Company,
   CreateCompanyDTO,
+  ApplicationStage,
 } from "@/features/companies/domain/types";
 
 interface Props {
@@ -29,9 +33,11 @@ const getInitialFormData = (data?: Company): CreateCompanyDTO => ({
   name: data?.name ?? "",
   categories: data?.categories ?? [],
   website: data?.website ?? "",
+  jobUrl: data?.jobUrl ?? "",
   contactEmail: data?.contactEmail ?? "",
   contactName: data?.contactName ?? "",
   note: data?.note ?? "",
+  applicationStage: data?.applicationStage ?? "research",
   isFavorite: data?.isFavorite ?? false,
   contactedAt: data?.contactedAt ?? "",
 });
@@ -66,7 +72,10 @@ export function CompanyForm({
     const name = newCategory.trim();
     if (!name) return;
     await createCategory.mutateAsync({ name });
-    setFormData((prev) => ({ ...prev, categories: [...prev.categories, name] }));
+    setFormData((prev) => ({
+      ...prev,
+      categories: [...prev.categories, name],
+    }));
     setNewCategory("");
   };
 
@@ -81,7 +90,7 @@ export function CompanyForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {initialData ? "Modifier" : "Ajouter"} une entreprise
@@ -98,14 +107,26 @@ export function CompanyForm({
               }
               required
             />
+            {!initialData && <DuplicateWarning name={formData.name} />}
           </div>
+
+          <div className="space-y-2">
+            <Label>Statut</Label>
+            <ApplicationStageSelect
+              value={formData.applicationStage ?? "research"}
+              onChange={(stage: ApplicationStage) =>
+                setFormData((prev) => ({ ...prev, applicationStage: stage }))
+              }
+            />
+          </div>
+
           <div className="space-y-2">
             <Label>Catégories</Label>
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <label
                   key={cat.id}
-                  className="flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm cursor-pointer hover:bg-muted"
+                  className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-1.5 text-sm hover:bg-muted"
                 >
                   <Checkbox
                     checked={formData.categories.includes(cat.name)}
@@ -121,49 +142,72 @@ export function CompanyForm({
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
               />
-              <Button type="button" variant="outline" onClick={handleAddCategory}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleAddCategory}
+              >
                 +
               </Button>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="contactName">Nom du contact</Label>
-            <Input
-              id="contactName"
-              value={formData.contactName}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  contactName: e.target.value,
-                }))
-              }
-            />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="contactName">Nom du contact</Label>
+              <Input
+                id="contactName"
+                value={formData.contactName}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    contactName: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="contactEmail">Email</Label>
+              <Input
+                id="contactEmail"
+                type="email"
+                value={formData.contactEmail}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    contactEmail: e.target.value,
+                  }))
+                }
+              />
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="contactEmail">Email</Label>
-            <Input
-              id="contactEmail"
-              type="email"
-              value={formData.contactEmail}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  contactEmail: e.target.value,
-                }))
-              }
-            />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="website">Site web</Label>
+              <Input
+                id="website"
+                type="url"
+                value={formData.website}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, website: e.target.value }))
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="jobUrl">Lien offre</Label>
+              <Input
+                id="jobUrl"
+                type="url"
+                placeholder="URL de l'offre d'emploi"
+                value={formData.jobUrl}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, jobUrl: e.target.value }))
+                }
+              />
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="website">Site web</Label>
-            <Input
-              id="website"
-              type="url"
-              value={formData.website}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, website: e.target.value }))
-              }
-            />
-          </div>
+
           <div className="space-y-2">
             <Label htmlFor="note">Note</Label>
             <Textarea
@@ -172,9 +216,10 @@ export function CompanyForm({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, note: e.target.value }))
               }
-              rows={3}
+              rows={2}
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="contactedAt">Date de contact</Label>
             <Input
@@ -189,10 +234,19 @@ export function CompanyForm({
                   ...prev,
                   contactedAt: value ? new Date(value).toISOString() : "",
                   status: value ? "waiting" : prev.status,
+                  applicationStage: value ? "applied" : prev.applicationStage,
                 }));
               }}
             />
           </div>
+
+          {initialData && (
+            <CompanyTimeline
+              companyId={initialData.id}
+              events={initialData.timeline}
+            />
+          )}
+
           <Button type="submit" className="w-full">
             {initialData ? "Modifier" : "Ajouter"}
           </Button>

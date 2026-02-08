@@ -2,6 +2,7 @@ import type {
   Company,
   CreateCompanyDTO,
   UpdateCompanyDTO,
+  AddTimelineEventDTO,
 } from "../domain/types";
 
 export interface CompanyRepository {
@@ -13,7 +14,11 @@ export interface CompanyRepository {
   getContacted(): Promise<Company[]>;
   getOverdue(days: number): Promise<Company[]>;
   getWaiting(): Promise<Company[]>;
+  search(query: string): Promise<Company[]>;
+  findDuplicates(name: string): Promise<Company[]>;
   create(dto: CreateCompanyDTO): Promise<Company>;
   update(dto: UpdateCompanyDTO): Promise<Company>;
+  addTimelineEvent(dto: AddTimelineEventDTO): Promise<Company>;
   delete(id: string): Promise<void>;
+  deleteMany(ids: string[]): Promise<void>;
 }

@@ -9,22 +9,10 @@ import { cn } from "@/features/ui/cn";
 import { exportAllData, importAllData } from "@/features/db/export";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Tableau de bord", icon: "home" as const },
-  {
-    href: "/favoris",
-    label: "Favoris",
-    icon: "heart" as const,
-  },
-  {
-    href: "/contacts",
-    label: "Contacts",
-    icon: "users" as const,
-  },
-  {
-    href: "/interactions",
-    label: "Interactions",
-    icon: "message" as const,
-  },
+  { href: "/", label: "Tableau de bord", shortLabel: "Accueil", icon: "home" as const },
+  { href: "/favoris", label: "Favoris", shortLabel: "Favoris", icon: "heart" as const },
+  { href: "/contacts", label: "Contacts", shortLabel: "Contacts", icon: "users" as const },
+  { href: "/interactions", label: "Interactions", shortLabel: "Interactions", icon: "message" as const },
 ];
 
 export function Navigation() {
@@ -56,8 +44,8 @@ export function Navigation() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-card/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-2">
+      <div className="mx-auto flex h-16 items-center justify-between px-2 sm:px-4">
+        <div className="flex items-center gap-1 sm:gap-2">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -65,7 +53,7 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 rounded-xl px-4 py-2 transition-all duration-200",
+                  "flex items-center gap-1 sm:gap-2 rounded-xl px-2 sm:px-4 py-2 transition-all duration-200",
                   isActive
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -73,21 +61,23 @@ export function Navigation() {
               >
                 <NavIcon
                   icon={item.icon}
-                  className={cn("h-5 w-5", isActive && "stroke-2")}
+                  className={cn("h-5 w-5 shrink-0", isActive && "stroke-2")}
                 />
-                <span className="text-sm font-medium">{item.label}</span>
+                <span className="hidden text-sm font-medium sm:inline">
+                  {item.label}
+                </span>
               </Link>
             );
           })}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={handleExport}
-            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground flex gap-2"
+            className="flex items-center gap-1 sm:gap-2 rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
             title="Exporter"
           >
             <svg
-              className="h-5 w-5"
+              className="h-5 w-5 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -99,15 +89,15 @@ export function Navigation() {
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
               />
             </svg>
-            Exporter
+            <span className="hidden text-sm sm:inline">Exporter</span>
           </button>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground flex gap-2"
+            className="flex items-center gap-1 sm:gap-2 rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
             title="Importer"
           >
             <svg
-              className="h-5 w-5"
+              className="h-5 w-5 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -119,7 +109,7 @@ export function Navigation() {
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
               />
             </svg>
-            Importer
+            <span className="hidden text-sm sm:inline">Importer</span>
           </button>
           <input
             ref={fileInputRef}
@@ -128,6 +118,12 @@ export function Navigation() {
             onChange={handleImport}
             className="hidden"
           />
+          <span
+            className="hidden text-xs text-muted-foreground/60 md:inline"
+            title="Aucune donnée collectée. Tout reste sur votre appareil."
+          >
+            Toutes les données sont stockées localement
+          </span>
         </div>
       </div>
     </nav>

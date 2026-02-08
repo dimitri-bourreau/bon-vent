@@ -14,7 +14,7 @@ Application de suivi de prospection pour freelances et chercheurs d'emploi.
 - **Objectifs quotidiens** : Suivez vos interactions (commentaires, messages, prises de contact)
 - **Export/Import** : Sauvegardez et restaurez vos données en JSON
 - **Thème clair/sombre** : Automatiquement synchronisé avec votre OS
-- **Stockage local** : Vos données restent sur votre appareil (IndexedDB)
+- **100% privé** : Aucune donnée collectée, tout reste sur votre appareil (IndexedDB)
 
 ## Stack technique
 
@@ -93,6 +93,10 @@ npm run dev
 ```
 
 Ouvrez [http://localhost:3000](http://localhost:3000).
+
+## Confidentialité
+
+**Aucune donnée n'est collectée.** L'application fonctionne entièrement en local dans votre navigateur. Vos données sont stockées dans IndexedDB et ne quittent jamais votre appareil. Il n'y a pas de serveur, pas de tracking, pas d'analytics.
 
 ## Licence
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { subDays } from "date-fns";
+import { subDays, differenceInDays } from "date-fns";
 import { useCompanies } from "@/hooks/use-companies.hook";
 
 export function StatsOverview() {

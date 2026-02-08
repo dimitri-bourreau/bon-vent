@@ -8,7 +8,7 @@ interface Props {
 
 export function PageHeader({ title, subtitle, children }: Props) {
   return (
-    <header className="relative w-full overflow-hidden bg-gradient-to-r from-white/90 via-chart-2/5 to-primary/50 p-4">
+    <header className="relative w-full bg-gradient-to-r from-white/90 via-chart-2/5 to-primary/50 p-4">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -left-4 top-1/2 h-px w-32 -translate-y-1/2 animate-[wind_3s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
         <div className="absolute left-1/4 top-1/3 h-px w-24 animate-[wind_4s_ease-in-out_infinite_0.5s] bg-gradient-to-r from-transparent via-chart-2/25 to-transparent" />

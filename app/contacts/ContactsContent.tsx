@@ -48,8 +48,8 @@ export function ContactsContent() {
   const handleCreate = (data: CreateCompanyDTO) => {
     createCompany.mutate({
       ...data,
-      status: "waiting",
-      contactedAt: data.contactedAt || new Date().toISOString(),
+      status: data.contactedAt ? "waiting" : "favorite",
+      contactedAt: data.contactedAt || undefined,
     });
     setShowForm(false);
   };

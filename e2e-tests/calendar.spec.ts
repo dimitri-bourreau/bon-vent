@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { clearIndexedDB, seedDatabase } from "./helpers";
+import { mockCompanies } from "./mock-data";
 
 test.describe("Calendar", () => {
   test.beforeEach(async ({ page }) => {
@@ -48,6 +49,88 @@ test.describe("Calendar", () => {
     if (await calendarButton.isVisible()) {
       await calendarButton.click();
       await expect(page.getByRole("dialog")).toBeVisible();
+    }
+  });
+
+  test("does not display companies in research stage even with contactedAt", async ({
+    page,
+  }) => {
+    await clearIndexedDB(page);
+
+    const researchCompanyWithContact = {
+      id: "research-with-contact",
+      name: "ResearchOnlyCompany",
+      categories: ["Tech"],
+      website: "",
+      jobUrl: "",
+      contactEmail: "",
+      contactName: "",
+      note: "",
+      status: "favorite" as const,
+      applicationStage: "research" as const,
+      timeline: [],
+      isFavorite: true,
+      contactedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const appliedCompany = mockCompanies.find(
+      (c) => c.applicationStage === "applied" && c.contactedAt,
+    );
+
+    await page.evaluate(
+      ({ researchCompany, appliedCompany }) => {
+        return new Promise<void>((resolve) => {
+          const req = indexedDB.open("bon-vent-db", 1);
+          req.onupgradeneeded = (event) => {
+            const db = (event.target as IDBOpenDBRequest).result;
+            if (!db.objectStoreNames.contains("companies")) {
+              const store = db.createObjectStore("companies", {
+                keyPath: "id",
+              });
+              store.createIndex("by-status", "status");
+              store.createIndex("by-favorite", "isFavorite");
+            }
+            ["zones", "domains", "objectives", "interactions"].forEach(
+              (name) => {
+                if (!db.objectStoreNames.contains(name)) {
+                  db.createObjectStore(name, { keyPath: "id" });
+                }
+              },
+            );
+          };
+          req.onsuccess = (event) => {
+            const db = (event.target as IDBOpenDBRequest).result;
+            const tx = db.transaction("companies", "readwrite");
+            tx.objectStore("companies").put(researchCompany);
+            if (appliedCompany) {
+              tx.objectStore("companies").put(appliedCompany);
+            }
+            tx.oncomplete = () => {
+              db.close();
+              resolve();
+            };
+          };
+        });
+      },
+      { researchCompany: researchCompanyWithContact, appliedCompany },
+    );
+
+    await page.reload();
+    await page.waitForTimeout(500);
+
+    const calendarEvents = page.locator(".grid-cols-7 button");
+    await expect(
+      calendarEvents.filter({ hasText: "ResearchOnlyCompany" }),
+    ).toHaveCount(0);
+
+    if (appliedCompany) {
+      const appliedEvents = calendarEvents.filter({
+        hasText: appliedCompany.name,
+      });
+      const count = await appliedEvents.count();
+      expect(count).toBeGreaterThan(0);
     }
   });
 });

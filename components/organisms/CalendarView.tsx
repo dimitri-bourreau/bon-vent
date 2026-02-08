@@ -41,7 +41,9 @@ export function CalendarView({ onSelectCompany }: Props) {
   const eventsByDay = useMemo(() => {
     const map = new Map<string, CalendarEvent[]>();
     companies.forEach((c) => {
-      if (c.contactedAt) {
+      const hasBeenContacted =
+        c.contactedAt && c.applicationStage !== "research";
+      if (hasBeenContacted) {
         const contactKey = format(new Date(c.contactedAt), "yyyy-MM-dd");
         const contactList = map.get(contactKey) || [];
         contactList.push({ company: c, type: "contact" });

@@ -55,7 +55,9 @@ test.describe("Company CRUD", () => {
     const row = page.locator("tr", { hasText: "TechStart" });
     await row.getByRole("button", { name: "×" }).click();
 
-    await expect(page.getByRole("alertdialog")).toContainText("Supprimer cette entreprise");
+    await expect(page.getByRole("alertdialog")).toContainText(
+      "Supprimer cette entreprise",
+    );
     await page.getByRole("button", { name: "Supprimer" }).click();
 
     await expect(page.getByText("TechStart")).not.toBeVisible();

@@ -13,11 +13,15 @@ export function StatsOverview() {
 
     const contacted = companies.filter((c) => c.contactedAt);
     const responses = companies.filter(
-      (c) => c.applicationStage !== "research" && c.applicationStage !== "applied",
+      (c) =>
+        c.applicationStage !== "research" && c.applicationStage !== "applied",
     );
-    const interviews = companies.filter((c) => c.applicationStage === "interview");
+    const interviews = companies.filter(
+      (c) => c.applicationStage === "interview",
+    );
     const offers = companies.filter(
-      (c) => c.applicationStage === "offer" || c.applicationStage === "accepted",
+      (c) =>
+        c.applicationStage === "offer" || c.applicationStage === "accepted",
     );
     const rejected = companies.filter((c) => c.applicationStage === "rejected");
 

@@ -192,9 +192,7 @@ export const mockObjectives = [
     type: "contact" as const,
     target: 5,
     current: 2,
-    weekStart: new Date(
-      Date.now() - new Date().getDay() * 24 * 60 * 60 * 1000,
-    )
+    weekStart: new Date(Date.now() - new Date().getDay() * 24 * 60 * 60 * 1000)
       .toISOString()
       .split("T")[0],
   },

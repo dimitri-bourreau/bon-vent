@@ -21,7 +21,9 @@ test.describe("Duplicate Detection", () => {
     await page.getByRole("button", { name: "+ Ajouter" }).click();
     await page.getByLabel("Nom *").fill("Tech");
     await expect(
-      page.getByText("Entreprise similaire existante").filter({ hasText: "TechStart" }),
+      page
+        .getByText("Entreprise similaire existante")
+        .filter({ hasText: "TechStart" }),
     ).toBeVisible();
   });
 

@@ -24,7 +24,9 @@ test.describe("Dashboard", () => {
     await seedDatabase(page);
     await page.reload();
     await expect(page.getByText("À relancer")).toBeVisible();
-    await expect(page.locator("span", { hasText: "GlobalTech" }).first()).toBeVisible();
+    await expect(
+      page.locator("span", { hasText: "GlobalTech" }).first(),
+    ).toBeVisible();
   });
 
   test("displays waiting companies section", async ({ page }) => {

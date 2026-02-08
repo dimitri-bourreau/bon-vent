@@ -48,7 +48,10 @@ export function CalendarView({ onSelectCompany }: Props) {
         map.set(contactKey, contactList);
 
         if (c.status === "waiting") {
-          const followupKey = format(addDays(new Date(c.contactedAt), 7), "yyyy-MM-dd");
+          const followupKey = format(
+            addDays(new Date(c.contactedAt), 7),
+            "yyyy-MM-dd",
+          );
           const followupList = map.get(followupKey) || [];
           followupList.push({ company: c, type: "followup" });
           map.set(followupKey, followupList);
@@ -94,8 +97,7 @@ export function CalendarView({ onSelectCompany }: Props) {
         {days.map((day) => {
           const key = format(day, "yyyy-MM-dd");
           const events = eventsByDay.get(key) || [];
-          const isCurrentMonth =
-            day >= monthStart && day <= monthEnd;
+          const isCurrentMonth = day >= monthStart && day <= monthEnd;
 
           return (
             <div

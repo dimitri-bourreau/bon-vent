@@ -18,7 +18,10 @@ import {
   useUpdateCompany,
 } from "@/features/companies/hooks/useCompanies";
 import { useZones } from "@/features/zones/hooks/useZones";
-import type { Company, CreateCompanyDTO } from "@/features/companies/domain/types";
+import type {
+  Company,
+  CreateCompanyDTO,
+} from "@/features/companies/domain/types";
 
 export default function HomePage() {
   const { data: companies = [] } = useCompanies();

@@ -11,23 +11,34 @@ test.describe("Categories", () => {
   });
 
   test("displays category manager", async ({ page }) => {
-    await expect(page.locator("aside").getByText("Catégories", { exact: true })).toBeVisible();
+    await expect(
+      page.locator("aside").getByText("Catégories", { exact: true }),
+    ).toBeVisible();
   });
 
   test("creates a new category", async ({ page }) => {
     await page.getByPlaceholder("Nouvelle catégorie...").fill("Healthcare");
     await page.getByPlaceholder("Nouvelle catégorie...").press("Enter");
 
-    await expect(page.locator("span.flex-1", { hasText: "Healthcare" })).toBeVisible();
+    await expect(
+      page.locator("span.flex-1", { hasText: "Healthcare" }),
+    ).toBeVisible();
   });
 
   test("deletes a category", async ({ page }) => {
-    const categoryList = page.locator("div.space-y-2").filter({ has: page.locator("span.flex-1") });
-    const remoteRow = categoryList.locator("div.flex").filter({ hasText: "Remote" }).first();
+    const categoryList = page
+      .locator("div.space-y-2")
+      .filter({ has: page.locator("span.flex-1") });
+    const remoteRow = categoryList
+      .locator("div.flex")
+      .filter({ hasText: "Remote" })
+      .first();
     await remoteRow.getByRole("button", { name: "×" }).click();
 
     await page.getByRole("button", { name: "Supprimer" }).click();
-    await expect(page.locator("span.flex-1", { hasText: "Remote" })).not.toBeVisible();
+    await expect(
+      page.locator("span.flex-1", { hasText: "Remote" }),
+    ).not.toBeVisible();
   });
 
   test("filters companies by category on favoris page", async ({ page }) => {

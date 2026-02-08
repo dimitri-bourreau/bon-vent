@@ -71,7 +71,9 @@ export function CompanyTimeline({ companyId, events }: Props) {
           placeholder="Ajouter une note..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAdd())}
+          onKeyDown={(e) =>
+            e.key === "Enter" && (e.preventDefault(), handleAdd())
+          }
           className="flex-1"
         />
         <Button type="button" size="sm" onClick={handleAdd}>

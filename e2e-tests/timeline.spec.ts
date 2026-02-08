@@ -12,7 +12,9 @@ test.describe("Timeline", () => {
   test("displays timeline section in company form", async ({ page }) => {
     await page.getByText("Acme Corp").click();
     await expect(page.getByRole("dialog")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Historique" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Historique" }),
+    ).toBeVisible();
   });
 
   test("shows existing timeline events", async ({ page }) => {

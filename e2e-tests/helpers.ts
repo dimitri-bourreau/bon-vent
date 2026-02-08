@@ -17,7 +17,10 @@ export async function clearIndexedDB(page: Page) {
 export async function seedDatabase(page: Page) {
   await page.evaluate((data) => {
     return new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error("seedDatabase timeout")), 10000);
+      const timeout = setTimeout(
+        () => reject(new Error("seedDatabase timeout")),
+        10000,
+      );
 
       const req = indexedDB.open("bon-vent-db", 1);
 
@@ -25,7 +28,9 @@ export async function seedDatabase(page: Page) {
         const db = (event.target as IDBOpenDBRequest).result;
 
         if (!db.objectStoreNames.contains("companies")) {
-          const companyStore = db.createObjectStore("companies", { keyPath: "id" });
+          const companyStore = db.createObjectStore("companies", {
+            keyPath: "id",
+          });
           companyStore.createIndex("by-status", "status");
           companyStore.createIndex("by-favorite", "isFavorite");
         }
@@ -34,11 +39,15 @@ export async function seedDatabase(page: Page) {
           zoneStore.createIndex("by-order", "order");
         }
         if (!db.objectStoreNames.contains("domains")) {
-          const domainStore = db.createObjectStore("domains", { keyPath: "id" });
+          const domainStore = db.createObjectStore("domains", {
+            keyPath: "id",
+          });
           domainStore.createIndex("by-order", "order");
         }
         if (!db.objectStoreNames.contains("objectives")) {
-          const objectiveStore = db.createObjectStore("objectives", { keyPath: "id" });
+          const objectiveStore = db.createObjectStore("objectives", {
+            keyPath: "id",
+          });
           objectiveStore.createIndex("by-type", "type");
           objectiveStore.createIndex("by-week", "weekStart");
         }

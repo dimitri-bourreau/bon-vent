@@ -11,8 +11,6 @@ test.describe("Bulk Actions", () => {
 
   test("shows bulk action checkbox when enabled", async ({ page }) => {
     await page.goto("/favoris?bulk=true");
-    await expect(
-      page.locator("thead").getByRole("checkbox"),
-    ).not.toBeVisible();
+    await expect(page.locator("thead").getByRole("checkbox")).not.toBeVisible();
   });
 });

@@ -5,13 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -33,7 +27,7 @@ interface Props {
 
 const getInitialFormData = (data?: Company): CreateCompanyDTO => ({
   name: data?.name ?? "",
-  zone: data?.zone ?? "",
+  categories: data?.categories ?? [],
   website: data?.website ?? "",
   contactEmail: data?.contactEmail ?? "",
   contactName: data?.contactName ?? "",
@@ -48,9 +42,9 @@ export function CompanyForm({
   onSubmit,
   initialData,
 }: Props) {
-  const { data: zones = [] } = useZones();
-  const createZone = useCreateZone();
-  const [newZone, setNewZone] = useState("");
+  const { data: categories = [] } = useZones();
+  const createCategory = useCreateZone();
+  const [newCategory, setNewCategory] = useState("");
   const [formData, setFormData] = useState<CreateCompanyDTO>(
     getInitialFormData(initialData),
   );
@@ -58,7 +52,7 @@ export function CompanyForm({
   useEffect(() => {
     if (open) {
       setFormData(getInitialFormData(initialData));
-      setNewZone("");
+      setNewCategory("");
     }
   }, [open, initialData]);
 
@@ -68,12 +62,21 @@ export function CompanyForm({
     onOpenChange(false);
   };
 
-  const handleAddZone = async () => {
-    const zoneName = newZone.trim();
-    if (!zoneName) return;
-    await createZone.mutateAsync({ name: zoneName });
-    setFormData((prev) => ({ ...prev, zone: zoneName }));
-    setNewZone("");
+  const handleAddCategory = async () => {
+    const name = newCategory.trim();
+    if (!name) return;
+    await createCategory.mutateAsync({ name });
+    setFormData((prev) => ({ ...prev, categories: [...prev.categories, name] }));
+    setNewCategory("");
+  };
+
+  const toggleCategory = (categoryName: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      categories: prev.categories.includes(categoryName)
+        ? prev.categories.filter((c) => c !== categoryName)
+        : [...prev.categories, categoryName],
+    }));
   };
 
   return (
@@ -97,31 +100,28 @@ export function CompanyForm({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="zone">Catégorie *</Label>
-            <Select
-              value={formData.zone}
-              onValueChange={(v) =>
-                setFormData((prev) => ({ ...prev, zone: v }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionner une catégorie" />
-              </SelectTrigger>
-              <SelectContent>
-                {zones.map((z) => (
-                  <SelectItem key={z.id} value={z.name}>
-                    {z.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label>Catégories</Label>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((cat) => (
+                <label
+                  key={cat.id}
+                  className="flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm cursor-pointer hover:bg-muted"
+                >
+                  <Checkbox
+                    checked={formData.categories.includes(cat.name)}
+                    onCheckedChange={() => toggleCategory(cat.name)}
+                  />
+                  {cat.name}
+                </label>
+              ))}
+            </div>
             <div className="flex gap-2">
               <Input
                 placeholder="Nouvelle catégorie"
-                value={newZone}
-                onChange={(e) => setNewZone(e.target.value)}
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
               />
-              <Button type="button" variant="outline" onClick={handleAddZone}>
+              <Button type="button" variant="outline" onClick={handleAddCategory}>
                 +
               </Button>
             </div>

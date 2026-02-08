@@ -3,7 +3,7 @@ export type CompanyStatus = "favorite" | "contacted" | "waiting" | "follow_up";
 export interface Company {
   id: string;
   name: string;
-  zone: string;
+  categories: string[];
   website?: string;
   contactEmail?: string;
   contactName?: string;
@@ -18,7 +18,7 @@ export interface Company {
 
 export interface CreateCompanyDTO {
   name: string;
-  zone: string;
+  categories: string[];
   website?: string;
   contactEmail?: string;
   contactName?: string;

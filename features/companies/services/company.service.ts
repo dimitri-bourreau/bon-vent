@@ -5,7 +5,7 @@ export function createCompanyService(repository: CompanyRepository) {
   return {
     getAll: () => repository.getAll(),
     getById: (id: string) => repository.getById(id),
-    getByZone: (zone: string) => repository.getByZone(zone),
+    getByCategory: (category: string) => repository.getByCategory(category),
     getFavorites: () => repository.getFavorites(),
     getContacted: () => repository.getContacted(),
     getOverdue: (days = 7) => repository.getOverdue(days),

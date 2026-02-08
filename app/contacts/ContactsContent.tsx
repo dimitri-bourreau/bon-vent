@@ -30,7 +30,7 @@ export function ContactsContent() {
   const nonFavoriteContacts = contacted.filter((c) => !c.isFavorite);
 
   const filtered = category
-    ? nonFavoriteContacts.filter((c) => c.zone === category)
+    ? nonFavoriteContacts.filter((c) => c.categories.includes(category))
     : nonFavoriteContacts;
 
   const sorted = [...filtered].sort((a, b) => {

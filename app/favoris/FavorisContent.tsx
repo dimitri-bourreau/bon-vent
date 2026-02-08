@@ -22,7 +22,7 @@ export function FavorisContent() {
   const createCompany = useCreateCompany();
 
   const filtered = category
-    ? favorites.filter((c) => c.zone === category)
+    ? favorites.filter((c) => c.categories.includes(category))
     : favorites;
 
   const handleCreate = (data: CreateCompanyDTO) => {

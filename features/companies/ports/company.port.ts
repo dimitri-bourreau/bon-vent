@@ -7,7 +7,7 @@ import type {
 export interface CompanyRepository {
   getAll(): Promise<Company[]>;
   getById(id: string): Promise<Company | undefined>;
-  getByZone(zone: string): Promise<Company[]>;
+  getByCategory(category: string): Promise<Company[]>;
   getByStatus(status: string): Promise<Company[]>;
   getFavorites(): Promise<Company[]>;
   getContacted(): Promise<Company[]>;

@@ -29,9 +29,11 @@ export function CompanyCard({
             <h3 className="truncate font-semibold text-foreground">
               {company.name}
             </h3>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {company.zone}
-            </p>
+            {company.categories.length > 0 && (
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {company.categories.join(", ")}
+              </p>
+            )}
           </div>
           <StatusBadge status={company.status} />
         </div>

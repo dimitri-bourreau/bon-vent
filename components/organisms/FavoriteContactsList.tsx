@@ -68,7 +68,7 @@ export function FavoriteContactsList({ companies }: Props) {
               <TableRow>
                 <TableHead className="w-10"></TableHead>
                 <TableHead>Entreprise</TableHead>
-                <TableHead>Catégorie</TableHead>
+                <TableHead>Catégories</TableHead>
                 <TableHead>Contact</TableHead>
                 <TableHead>Contacté le</TableHead>
                 <TableHead className="w-10"></TableHead>
@@ -110,7 +110,11 @@ export function FavoriteContactsList({ companies }: Props) {
                       </p>
                     )}
                   </TableCell>
-                  <TableCell className="text-sm">{company.zone}</TableCell>
+                  <TableCell className="text-sm">
+                    {company.categories.length > 0
+                      ? company.categories.join(", ")
+                      : "-"}
+                  </TableCell>
                   <TableCell>
                     {company.contactName && (
                       <div className="text-sm">{company.contactName}</div>

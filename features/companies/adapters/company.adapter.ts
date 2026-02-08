@@ -19,9 +19,9 @@ export class CompanyIndexedDBAdapter implements CompanyRepository {
     return db.get("companies", id);
   }
 
-  async getByZone(zone: string): Promise<Company[]> {
-    const db = await getDB();
-    return db.getAllFromIndex("companies", "by-zone", zone);
+  async getByCategory(category: string): Promise<Company[]> {
+    const all = await this.getAll();
+    return all.filter((c) => c.categories.includes(category));
   }
 
   async getByStatus(status: string): Promise<Company[]> {
@@ -63,7 +63,7 @@ export class CompanyIndexedDBAdapter implements CompanyRepository {
     const company: Company = {
       id: uuid(),
       name: dto.name,
-      zone: dto.zone,
+      categories: dto.categories,
       website: dto.website,
       contactEmail: dto.contactEmail,
       contactName: dto.contactName,

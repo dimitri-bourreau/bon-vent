@@ -28,7 +28,7 @@ export default function HomePage() {
     const colors = ["#6366f1", "#06b6d4", "#22c55e", "#f59e0b", "#ec4899"];
     return categories.slice(0, 5).map((cat, i) => ({
       label: cat.name,
-      value: companies.filter((c) => c.zone === cat.name).length,
+      value: companies.filter((c) => c.categories.includes(cat.name)).length,
       color: colors[i % colors.length],
     }));
   }, [categories, companies]);

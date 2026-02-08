@@ -6,7 +6,7 @@ export interface BonVentDB extends DBSchema {
     value: {
       id: string;
       name: string;
-      zone: string;
+      categories: string[];
       website?: string;
       contactEmail?: string;
       contactName?: string;
@@ -18,7 +18,7 @@ export interface BonVentDB extends DBSchema {
       createdAt: string;
       updatedAt: string;
     };
-    indexes: { "by-zone": string; "by-status": string; "by-favorite": number };
+    indexes: { "by-status": string; "by-favorite": number };
   };
   zones: {
     key: string;
@@ -43,7 +43,7 @@ export interface BonVentDB extends DBSchema {
 }
 
 const DB_NAME = "bon-vent-db";
-const DB_VERSION = 2;
+const DB_VERSION = 1;
 
 let dbInstance: IDBPDatabase<BonVentDB> | null = null;
 
@@ -51,29 +51,24 @@ export async function getDB(): Promise<IDBPDatabase<BonVentDB>> {
   if (dbInstance) return dbInstance;
 
   dbInstance = await openDB<BonVentDB>(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion) {
-      if (oldVersion < 1) {
-        const companyStore = db.createObjectStore("companies", { keyPath: "id" });
-        companyStore.createIndex("by-zone", "zone");
-        companyStore.createIndex("by-status", "status");
-        companyStore.createIndex("by-favorite", "isFavorite");
+    upgrade(db) {
+      const companyStore = db.createObjectStore("companies", { keyPath: "id" });
+      companyStore.createIndex("by-status", "status");
+      companyStore.createIndex("by-favorite", "isFavorite");
 
-        const zoneStore = db.createObjectStore("zones", { keyPath: "id" });
-        zoneStore.createIndex("by-order", "order");
+      const zoneStore = db.createObjectStore("zones", { keyPath: "id" });
+      zoneStore.createIndex("by-order", "order");
 
-        const objectiveStore = db.createObjectStore("objectives", { keyPath: "id" });
-        objectiveStore.createIndex("by-type", "type");
-        objectiveStore.createIndex("by-week", "weekStart");
+      const domainStore = db.createObjectStore("domains", { keyPath: "id" });
+      domainStore.createIndex("by-order", "order");
 
-        const interactionStore = db.createObjectStore("interactions", { keyPath: "id" });
-        interactionStore.createIndex("by-type", "type");
-        interactionStore.createIndex("by-date", "date");
-      }
+      const objectiveStore = db.createObjectStore("objectives", { keyPath: "id" });
+      objectiveStore.createIndex("by-type", "type");
+      objectiveStore.createIndex("by-week", "weekStart");
 
-      if (oldVersion < 2) {
-        const domainStore = db.createObjectStore("domains", { keyPath: "id" });
-        domainStore.createIndex("by-order", "order");
-      }
+      const interactionStore = db.createObjectStore("interactions", { keyPath: "id" });
+      interactionStore.createIndex("by-type", "type");
+      interactionStore.createIndex("by-date", "date");
     },
   });
 

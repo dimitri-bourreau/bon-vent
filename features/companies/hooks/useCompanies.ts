@@ -13,7 +13,7 @@ const KEYS = {
   contacted: ["companies", "contacted"] as const,
   overdue: ["companies", "overdue"] as const,
   waiting: ["companies", "waiting"] as const,
-  byZone: (zone: string) => ["companies", "zone", zone] as const,
+  byCategory: (category: string) => ["companies", "category", category] as const,
 };
 
 export function useCompanies() {
@@ -39,11 +39,11 @@ export function useWaiting() {
   return useQuery({ queryKey: KEYS.waiting, queryFn: service.getWaiting });
 }
 
-export function useCompaniesByZone(zone: string) {
+export function useCompaniesByCategory(category: string) {
   return useQuery({
-    queryKey: KEYS.byZone(zone),
-    queryFn: () => service.getByZone(zone),
-    enabled: !!zone,
+    queryKey: KEYS.byCategory(category),
+    queryFn: () => service.getByCategory(category),
+    enabled: !!category,
   });
 }
 

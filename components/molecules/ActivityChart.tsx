@@ -12,9 +12,10 @@ interface DataPoint {
 interface Props {
   data: DataPoint[];
   type?: "bar" | "donut";
+  title?: string;
 }
 
-export function ActivityChart({ data, type = "bar" }: Props) {
+export function ActivityChart({ data, type = "bar", title = "" }: Props) {
   const maxValue = useMemo(
     () => Math.max(...data.map((d) => d.value), 1),
     [data],

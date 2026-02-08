@@ -43,63 +43,65 @@ export default function HomePage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="flex min-h-0 flex-1 flex-col gap-6">
       <PageHeader
         title="Tableau de bord"
         subtitle="Vue d'ensemble de votre prospection"
         showLogo
       />
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatsCard title="Total" value={companies.length} variant="default" />
-        <StatsCard title="Favoris" value={favorites.length} variant="warning" />
-        <StatsCard
-          title="Contactées"
-          value={contacted.length}
-          variant="primary"
-        />
-        <StatsCard
-          title="En attente"
-          value={waiting.length + overdue.length}
-          variant={overdue.length > 0 ? "danger" : "success"}
-          subtitle={
-            overdue.length > 0 ? `${overdue.length} à relancer` : undefined
-          }
-        />
+      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
+        <aside className="flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-3">
+            <StatsCard title="Total" value={companies.length} variant="default" />
+            <StatsCard title="Favoris" value={favorites.length} variant="warning" />
+            <StatsCard
+              title="Contactées"
+              value={contacted.length}
+              variant="primary"
+            />
+            <StatsCard
+              title="En attente"
+              value={waiting.length + overdue.length}
+              variant={overdue.length > 0 ? "danger" : "success"}
+              subtitle={
+                overdue.length > 0 ? `${overdue.length} à relancer` : undefined
+              }
+            />
+          </div>
+          <ActivityChart title="Par statut" data={statusData} type="donut" />
+          <ObjectiveTracker />
+          {zoneData.length > 0 && (
+            <ActivityChart title="Par zone" data={zoneData} type="bar" />
+          )}
+        </aside>
+
+        <div className="flex min-h-0 flex-col gap-6 overflow-auto">
+          {overdue.length > 0 && (
+            <section>
+              <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+                <span className="h-2 w-2 rounded-full bg-destructive" />À relancer (
+                {overdue.length})
+              </h2>
+              <CompanyList
+                companies={overdue}
+                emptyMessage="Aucune relance nécessaire"
+              />
+            </section>
+          )}
+
+          <section className="flex-1">
+            <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+              <span className="h-2 w-2 rounded-full bg-chart-2" />
+              Réponses en attente ({waiting.length})
+            </h2>
+            <CompanyList
+              companies={waiting}
+              emptyMessage="Aucune réponse en attente"
+            />
+          </section>
+        </div>
       </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <ActivityChart title="Par statut" data={statusData} type="donut" />
-        <ObjectiveTracker />
-      </div>
-
-      {zoneData.length > 0 && (
-        <ActivityChart title="Par zone" data={zoneData} type="bar" />
-      )}
-
-      {overdue.length > 0 && (
-        <section>
-          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-            <span className="h-2 w-2 rounded-full bg-destructive" />À relancer (
-            {overdue.length})
-          </h2>
-          <CompanyList
-            companies={overdue}
-            emptyMessage="Aucune relance nécessaire"
-          />
-        </section>
-      )}
-
-      <section>
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-          <span className="h-2 w-2 rounded-full bg-chart-2" />
-          Réponses en attente ({waiting.length})
-        </h2>
-        <CompanyList
-          companies={waiting}
-          emptyMessage="Aucune réponse en attente"
-        />
-      </section>
     </div>
   );
 }

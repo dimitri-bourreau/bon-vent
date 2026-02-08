@@ -55,7 +55,7 @@ export function ContactsContent() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex min-h-0 flex-1 flex-col gap-6">
       <div className="flex items-start justify-between gap-4">
         <PageHeader
           title="Contacts"
@@ -66,34 +66,38 @@ export function ContactsContent() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <StatsCard
-          title="Contactées"
-          value={contacted.length}
-          variant="primary"
-        />
-        <StatsCard
-          title="En attente"
-          value={waiting.length}
-          variant="default"
-        />
-        <StatsCard title="À relancer" value={overdue.length} variant="danger" />
+      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
+        <aside className="flex flex-col gap-4">
+          <div className="grid grid-cols-3 gap-3 lg:grid-cols-1">
+            <StatsCard
+              title="Contactées"
+              value={contacted.length}
+              variant="primary"
+            />
+            <StatsCard
+              title="En attente"
+              value={waiting.length}
+              variant="default"
+            />
+            <StatsCard title="À relancer" value={overdue.length} variant="danger" />
+          </div>
+          <ActivityChart
+            title="Statut des contacts"
+            data={statusData}
+            type="donut"
+          />
+        </aside>
+
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">
+          <ZoneTabs />
+          <CompanyList
+            companies={sorted}
+            emptyMessage={
+              zone ? `Aucun contact dans "${zone}"` : "Aucun contact pour le moment"
+            }
+          />
+        </div>
       </div>
-
-      <ActivityChart
-        title="Statut des contacts"
-        data={statusData}
-        type="donut"
-      />
-
-      <ZoneTabs />
-
-      <CompanyList
-        companies={sorted}
-        emptyMessage={
-          zone ? `Aucun contact dans "${zone}"` : "Aucun contact pour le moment"
-        }
-      />
 
       <CompanyForm
         open={showForm}

@@ -56,7 +56,7 @@ export default function RootLayout({
         <QueryProvider>
           <NuqsAdapter>
             <BackgroundEffects />
-            <main className="mx-auto max-w-3xl px-4 pb-24 pt-6 sm:px-6">
+            <main className="flex min-h-screen flex-col px-4 pb-24 pt-6 sm:px-6">
               {children}
             </main>
             <Navigation />

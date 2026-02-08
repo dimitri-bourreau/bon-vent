@@ -34,7 +34,7 @@ export function FavorisContent() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex min-h-0 flex-1 flex-col gap-6">
       <div className="flex items-start justify-between gap-4">
         <PageHeader title="Favoris" subtitle="Vos entreprises préférées" />
         <Button onClick={() => setShowForm(true)} className="shrink-0">
@@ -42,33 +42,35 @@ export function FavorisContent() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <StatsCard
-          title="Total favoris"
-          value={favorites.length}
-          variant="warning"
-        />
-        <StatsCard
-          title="Filtrées"
-          value={filtered.length}
-          variant="default"
-          subtitle={zone ?? "Toutes zones"}
-        />
+      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
+        <aside className="flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
+            <StatsCard
+              title="Total favoris"
+              value={favorites.length}
+              variant="warning"
+            />
+            <StatsCard
+              title="Filtrées"
+              value={filtered.length}
+              variant="default"
+              subtitle={zone ?? "Toutes zones"}
+            />
+          </div>
+          <DomainManager />
+          <DataManager />
+        </aside>
+
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">
+          <ZoneTabs />
+          <CompanyList
+            companies={filtered}
+            emptyMessage={
+              zone ? `Aucun favori dans "${zone}"` : "Aucun favori pour le moment"
+            }
+          />
+        </div>
       </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <DomainManager />
-        <DataManager />
-      </div>
-
-      <ZoneTabs />
-
-      <CompanyList
-        companies={filtered}
-        emptyMessage={
-          zone ? `Aucun favori dans "${zone}"` : "Aucun favori pour le moment"
-        }
-      />
 
       <CompanyForm
         open={showForm}

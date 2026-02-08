@@ -65,15 +65,52 @@ export function StatsOverview() {
     <div className="rounded-lg border bg-card p-4">
       <h3 className="mb-4 font-semibold">Statistiques</h3>
       <div className="grid grid-cols-3 gap-4 text-center">
-        <Stat label="Total" value={stats.total} />
-        <Stat label="Contactées" value={stats.contacted} />
-        <Stat label="Cette semaine" value={stats.thisWeek} />
-        <Stat label="Réponses" value={stats.responses} />
-        <Stat label="Entretiens" value={stats.interviews} />
-        <Stat label="Offres" value={stats.offers} />
-        <Stat label="Refus" value={stats.rejected} color="text-red-500" />
-        <Stat label="Taux réponse" value={`${stats.responseRate}%`} />
-        <Stat label="Délai moy." value={`${stats.avgResponseTime}j`} />
+        <Stat
+          label="Total"
+          value={stats.total}
+          title="Nombre total d'entreprises"
+        />
+        <Stat
+          label="Contactées"
+          value={stats.contacted}
+          title="Entreprises avec une date de contact"
+        />
+        <Stat
+          label="Cette semaine"
+          value={stats.thisWeek}
+          title="Contactées dans les 7 derniers jours"
+        />
+        <Stat
+          label="Réponses"
+          value={stats.responses}
+          title="Statut autre que 'Recherche' ou 'Postulé'"
+        />
+        <Stat
+          label="Entretiens"
+          value={stats.interviews}
+          title="Statut 'Entretien'"
+        />
+        <Stat
+          label="Offres"
+          value={stats.offers}
+          title="Statut 'Offre' ou 'Accepté'"
+        />
+        <Stat
+          label="Refus"
+          value={stats.rejected}
+          color="text-red-500"
+          title="Statut 'Refusé'"
+        />
+        <Stat
+          label="Taux réponse"
+          value={`${stats.responseRate}%`}
+          title="Réponses / Contactées"
+        />
+        <Stat
+          label="Délai moy."
+          value={`${stats.avgResponseTime}j`}
+          title="Délai moyen entre contact et dernière interaction"
+        />
       </div>
     </div>
   );
@@ -83,13 +120,15 @@ function Stat({
   label,
   value,
   color,
+  title,
 }: {
   label: string;
   value: string | number;
   color?: string;
+  title?: string;
 }) {
   return (
-    <div>
+    <div title={title}>
       <div className={`text-xl font-bold ${color ?? ""}`}>{value}</div>
       <div className="text-xs text-muted-foreground">{label}</div>
     </div>

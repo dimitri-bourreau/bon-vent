@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -77,8 +77,20 @@ export function CompanyList({
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showBulkDelete, setShowBulkDelete] = useState(false);
-  const [sortKey, setSortKey] = useState<string | null>(null);
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [sortKey, setSortKey] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem("companyListSortKey");
+  });
+  const [sortDir, setSortDir] = useState<"asc" | "desc">(() => {
+    if (typeof window === "undefined") return "asc";
+    return (localStorage.getItem("companyListSortDir") as "asc" | "desc") ?? "asc";
+  });
+
+  useEffect(() => {
+    if (sortKey) localStorage.setItem("companyListSortKey", sortKey);
+    else localStorage.removeItem("companyListSortKey");
+    localStorage.setItem("companyListSortDir", sortDir);
+  }, [sortKey, sortDir]);
 
   const updateCompany = useUpdateCompany();
   const deleteCompany = useDeleteCompany();

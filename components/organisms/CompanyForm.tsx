@@ -245,10 +245,7 @@ export function CompanyForm({
           </div>
 
           {initialData && (
-            <CompanyTimeline
-              companyId={initialData.id}
-              events={initialData.timeline}
-            />
+            <CompanyTimeline companyId={initialData.id} />
           )}
 
           <Button type="submit" className="w-full">

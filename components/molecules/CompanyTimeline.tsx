@@ -11,11 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatRelative } from "@/features/dates/dates";
-import { useAddTimelineEvent } from "@/features/companies/hooks/useCompanies";
-import type {
-  TimelineEvent,
-  TimelineEventType,
-} from "@/features/companies/domain/types";
+import {
+  useAddTimelineEvent,
+  useCompany,
+} from "@/features/companies/hooks/useCompanies";
+import type { TimelineEventType } from "@/features/companies/domain/types";
 
 const EVENT_TYPES: { value: TimelineEventType; label: string; icon: string }[] =
   [
@@ -30,13 +30,15 @@ const EVENT_TYPES: { value: TimelineEventType; label: string; icon: string }[] =
 
 interface Props {
   companyId: string;
-  events: TimelineEvent[];
 }
 
-export function CompanyTimeline({ companyId, events }: Props) {
+export function CompanyTimeline({ companyId }: Props) {
+  const { data: company } = useCompany(companyId);
   const [type, setType] = useState<TimelineEventType>("note");
   const [content, setContent] = useState("");
   const addEvent = useAddTimelineEvent();
+
+  const events = company?.timeline ?? [];
 
   const handleAdd = () => {
     if (!content.trim()) return;

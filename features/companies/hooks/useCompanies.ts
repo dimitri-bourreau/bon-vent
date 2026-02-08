@@ -14,6 +14,7 @@ const service = createCompanyService(companyAdapter);
 
 const KEYS = {
   all: ["companies"] as const,
+  byId: (id: string) => ["companies", "byId", id] as const,
   favorites: ["companies", "favorites"] as const,
   contacted: ["companies", "contacted"] as const,
   overdue: ["companies", "overdue"] as const,
@@ -26,6 +27,14 @@ const KEYS = {
 
 export function useCompanies() {
   return useQuery({ queryKey: KEYS.all, queryFn: service.getAll });
+}
+
+export function useCompany(id: string | undefined) {
+  return useQuery({
+    queryKey: KEYS.byId(id ?? ""),
+    queryFn: () => service.getById(id!),
+    enabled: !!id,
+  });
 }
 
 export function useFavorites() {

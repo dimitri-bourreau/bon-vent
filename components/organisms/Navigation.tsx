@@ -20,6 +20,11 @@ const NAV_ITEMS = [
     label: "Contacts",
     icon: "users" as const,
   },
+  {
+    href: "/interactions",
+    label: "Interactions",
+    icon: "message" as const,
+  },
 ];
 
 export function Navigation() {

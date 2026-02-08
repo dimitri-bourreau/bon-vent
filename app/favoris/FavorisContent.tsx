@@ -65,6 +65,7 @@ export function FavorisContent() {
           </p>
           <CompanyList
             companies={filtered}
+            showBulkActions
             emptyMessage={
               category
                 ? `Aucune inspiration dans "${category}"`

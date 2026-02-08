@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
+import { BulkEditForm } from "@/components/molecules/BulkEditForm";
 import { ApplicationStageBadge } from "@/components/molecules/ApplicationStageSelect";
 import {
   AlertDialog,
@@ -46,7 +47,13 @@ interface SortHeaderProps {
   onSort: (key: string) => void;
 }
 
-function SortHeader({ label, column, sortKey, sortDir, onSort }: SortHeaderProps) {
+function SortHeader({
+  label,
+  column,
+  sortKey,
+  sortDir,
+  onSort,
+}: SortHeaderProps) {
   const isActive = sortKey === column;
   return (
     <Button
@@ -73,13 +80,16 @@ export function CompanyList({
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showBulkDelete, setShowBulkDelete] = useState(false);
+  const [showBulkEdit, setShowBulkEdit] = useState(false);
   const [sortKey, setSortKey] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     return localStorage.getItem("companyListSortKey");
   });
   const [sortDir, setSortDir] = useState<"asc" | "desc">(() => {
     if (typeof window === "undefined") return "asc";
-    return (localStorage.getItem("companyListSortDir") as "asc" | "desc") ?? "asc";
+    return (
+      (localStorage.getItem("companyListSortDir") as "asc" | "desc") ?? "asc"
+    );
   });
 
   useEffect(() => {
@@ -164,6 +174,13 @@ export function CompanyList({
           <span className="text-sm">{selected.size} sélectionné(s)</span>
           <Button
             size="sm"
+            variant="outline"
+            onClick={() => setShowBulkEdit(true)}
+          >
+            Modifier
+          </Button>
+          <Button
+            size="sm"
             variant="destructive"
             onClick={() => setShowBulkDelete(true)}
           >
@@ -186,19 +203,43 @@ export function CompanyList({
               )}
               <TableHead className="w-10"></TableHead>
               <TableHead>
-                <SortHeader label="Entreprise" column="name" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <SortHeader
+                  label="Entreprise"
+                  column="name"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
               </TableHead>
               {!hideStatus && (
                 <TableHead>
-                  <SortHeader label="Statut" column="stage" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                  <SortHeader
+                    label="Statut"
+                    column="stage"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                    onSort={handleSort}
+                  />
                 </TableHead>
               )}
               <TableHead>Catégories</TableHead>
               <TableHead>
-                <SortHeader label="Contact" column="contact" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <SortHeader
+                  label="Contact"
+                  column="contact"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
               </TableHead>
               <TableHead>
-                <SortHeader label="Contacté le" column="contactedAt" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                <SortHeader
+                  label="Contacté le"
+                  column="contactedAt"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
               </TableHead>
               <TableHead className="w-10"></TableHead>
             </TableRow>
@@ -350,6 +391,13 @@ export function CompanyList({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <BulkEditForm
+        open={showBulkEdit}
+        onOpenChange={setShowBulkEdit}
+        selectedIds={[...selected]}
+        onSuccess={() => setSelected(new Set())}
+      />
     </>
   );
 }

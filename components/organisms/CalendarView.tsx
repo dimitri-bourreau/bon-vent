@@ -41,17 +41,18 @@ export function CalendarView({ onSelectCompany }: Props) {
   const eventsByDay = useMemo(() => {
     const map = new Map<string, CalendarEvent[]>();
     companies.forEach((c) => {
+      const { contactedAt } = c;
       const hasBeenContacted =
-        c.contactedAt && c.applicationStage !== "research";
+        contactedAt && c.applicationStage !== "research";
       if (hasBeenContacted) {
-        const contactKey = format(new Date(c.contactedAt), "yyyy-MM-dd");
+        const contactKey = format(new Date(contactedAt), "yyyy-MM-dd");
         const contactList = map.get(contactKey) || [];
         contactList.push({ company: c, type: "contact" });
         map.set(contactKey, contactList);
 
         if (c.status === "waiting") {
           const followupKey = format(
-            addDays(new Date(c.contactedAt), 7),
+            addDays(new Date(contactedAt), 7),
             "yyyy-MM-dd",
           );
           const followupList = map.get(followupKey) || [];

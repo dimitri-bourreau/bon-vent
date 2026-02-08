@@ -96,6 +96,7 @@ export function ContactsContent() {
           </div>
           <CompanyList
             companies={sorted}
+            showBulkActions
             emptyMessage={
               category
                 ? `Aucun contact dans "${category}"`

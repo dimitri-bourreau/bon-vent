@@ -8,7 +8,7 @@ import { StatsCard } from "@/components/molecules/StatsCard";
 import { ActivityChart } from "@/components/molecules/ActivityChart";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
-import { ZoneTabs } from "@/components/organisms/ZoneTabs";
+import { CategoryTabs } from "@/components/organisms/CategoryTabs";
 import {
   useContacted,
   useCreateCompany,
@@ -19,13 +19,15 @@ import type { CreateCompanyDTO } from "@/features/companies/domain/types";
 
 export function ContactsContent() {
   const [showForm, setShowForm] = useState(false);
-  const [zone] = useQueryState("zone");
+  const [category] = useQueryState("category");
   const { data: contacted = [] } = useContacted();
   const { data: overdue = [] } = useOverdue();
   const { data: waiting = [] } = useWaiting();
   const createCompany = useCreateCompany();
 
-  const filtered = zone ? contacted.filter((c) => c.zone === zone) : contacted;
+  const filtered = category
+    ? contacted.filter((c) => c.zone === category)
+    : contacted;
 
   const sorted = [...filtered].sort((a, b) => {
     if (!a.contactedAt || !b.contactedAt) return 0;
@@ -89,11 +91,13 @@ export function ContactsContent() {
         </aside>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">
-          <ZoneTabs />
+          <CategoryTabs />
           <CompanyList
             companies={sorted}
             emptyMessage={
-              zone ? `Aucun contact dans "${zone}"` : "Aucun contact pour le moment"
+              category
+                ? `Aucun contact dans "${category}"`
+                : "Aucun contact pour le moment"
             }
           />
         </div>

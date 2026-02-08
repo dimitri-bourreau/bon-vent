@@ -19,18 +19,18 @@ export default function HomePage() {
   const { data: overdue = [] } = useOverdue();
   const { data: waiting = [] } = useWaiting();
   const { data: favorites = [] } = useFavorites();
-  const { data: zones = [] } = useZones();
+  const { data: categories = [] } = useZones();
 
   const contacted = companies.filter((c) => c.contactedAt);
 
-  const zoneData = useMemo(() => {
+  const categoryData = useMemo(() => {
     const colors = ["#6366f1", "#06b6d4", "#22c55e", "#f59e0b", "#ec4899"];
-    return zones.slice(0, 5).map((zone, i) => ({
-      label: zone.name,
-      value: companies.filter((c) => c.zone === zone.name).length,
+    return categories.slice(0, 5).map((cat, i) => ({
+      label: cat.name,
+      value: companies.filter((c) => c.zone === cat.name).length,
       color: colors[i % colors.length],
     }));
-  }, [zones, companies]);
+  }, [categories, companies]);
 
   const statusData = useMemo(
     () => [
@@ -71,8 +71,8 @@ export default function HomePage() {
           </div>
           <ActivityChart title="Par statut" data={statusData} type="donut" />
           <ObjectiveTracker />
-          {zoneData.length > 0 && (
-            <ActivityChart title="Par zone" data={zoneData} type="bar" />
+          {categoryData.length > 0 && (
+            <ActivityChart title="Par catégorie" data={categoryData} type="bar" />
           )}
         </aside>
 

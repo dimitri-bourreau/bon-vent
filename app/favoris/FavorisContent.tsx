@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/molecules/PageHeader";
 import { StatsCard } from "@/components/molecules/StatsCard";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
-import { ZoneTabs } from "@/components/organisms/ZoneTabs";
+import { CategoryTabs } from "@/components/organisms/CategoryTabs";
 import { DomainManager } from "@/components/organisms/DomainManager";
 import { DataManager } from "@/components/organisms/DataManager";
 import {
@@ -18,11 +18,13 @@ import type { CreateCompanyDTO } from "@/features/companies/domain/types";
 
 export function FavorisContent() {
   const [showForm, setShowForm] = useState(false);
-  const [zone] = useQueryState("zone");
+  const [category] = useQueryState("category");
   const { data: favorites = [] } = useFavorites();
   const createCompany = useCreateCompany();
 
-  const filtered = zone ? favorites.filter((c) => c.zone === zone) : favorites;
+  const filtered = category
+    ? favorites.filter((c) => c.zone === category)
+    : favorites;
 
   const handleCreate = (data: CreateCompanyDTO) => {
     createCompany.mutate({
@@ -54,7 +56,7 @@ export function FavorisContent() {
               title="Filtrées"
               value={filtered.length}
               variant="default"
-              subtitle={zone ?? "Toutes zones"}
+              subtitle={category ?? "Toutes catégories"}
             />
           </div>
           <DomainManager />
@@ -62,11 +64,13 @@ export function FavorisContent() {
         </aside>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">
-          <ZoneTabs />
+          <CategoryTabs />
           <CompanyList
             companies={filtered}
             emptyMessage={
-              zone ? `Aucun favori dans "${zone}"` : "Aucun favori pour le moment"
+              category
+                ? `Aucun favori dans "${category}"`
+                : "Aucun favori pour le moment"
             }
           />
         </div>

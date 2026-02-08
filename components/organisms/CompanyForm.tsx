@@ -94,7 +94,7 @@ export function CompanyForm({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="zone">Zone géographique *</Label>
+            <Label htmlFor="zone">Catégorie *</Label>
             <Select
               value={formData.zone}
               onValueChange={(v) =>
@@ -102,7 +102,7 @@ export function CompanyForm({
               }
             >
               <SelectTrigger>
-                <SelectValue placeholder="Sélectionner une zone" />
+                <SelectValue placeholder="Sélectionner une catégorie" />
               </SelectTrigger>
               <SelectContent>
                 {zones.map((z) => (
@@ -114,7 +114,7 @@ export function CompanyForm({
             </Select>
             <div className="flex gap-2">
               <Input
-                placeholder="Nouvelle zone"
+                placeholder="Nouvelle catégorie"
                 value={newZone}
                 onChange={(e) => setNewZone(e.target.value)}
               />

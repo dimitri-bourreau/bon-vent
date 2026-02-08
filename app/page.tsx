@@ -45,18 +45,13 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <PageHeader />
+      <PageHeader
+        title="Tableau de bord"
+        subtitle="Vue d'ensemble de votre prospection"
+      />
 
       <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr] px-8">
         <aside className="flex flex-col gap-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">
-              Tableau de bord
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Vue d&apos;ensemble de votre prospection
-            </p>
-          </div>
           <ObjectiveTracker />
           <div className="grid grid-cols-2 gap-3">
             <StatsCard

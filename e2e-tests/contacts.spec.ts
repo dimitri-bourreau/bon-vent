@@ -5,8 +5,10 @@ test.describe("Contacts page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/contacts");
     await clearIndexedDB(page);
+    await page.reload();
     await seedDatabase(page);
     await page.reload();
+    await expect(page.getByText("BigBank Inc")).toBeVisible();
   });
 
   test("displays contacted companies", async ({ page }) => {
@@ -22,21 +24,20 @@ test.describe("Contacts page", () => {
     await expect(aside.getByText("En cours")).toBeVisible();
     await expect(aside.getByText("Refusé")).toBeVisible();
 
-    const statsCards = aside.locator('[class*="text-2xl"]');
-    const statsTexts = await statsCards.allTextContents();
-    const statsValues = statsTexts.map((text) => parseInt(text, 10));
-
-    expect(statsValues[0]).toBe(4);
-    expect(statsValues[1]).toBe(2);
-    expect(statsValues[2]).toBe(2);
-    expect(statsValues[3]).toBe(0);
+    const statsValues = aside.locator("p.text-2xl");
+    await expect(statsValues.nth(0)).toHaveText("4");
+    await expect(statsValues.nth(1)).toHaveText("2");
+    await expect(statsValues.nth(2)).toHaveText("2");
+    await expect(statsValues.nth(3)).toHaveText("0");
   });
 
   test("creates contacted company with date", async ({ page }) => {
     await page.getByRole("button", { name: "+ Ajouter" }).click();
-    await page.getByLabel("Nom *").fill("Just Contacted");
+    await page.getByLabel("Nom *").fill("New Test Company");
     await page.getByRole("button", { name: "Ajouter" }).click();
 
-    await expect(page.getByText("Just Contacted")).toBeVisible();
+    await expect(
+      page.getByText("New Test Company", { exact: true }),
+    ).toBeVisible();
   });
 });

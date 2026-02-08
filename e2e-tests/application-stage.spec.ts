@@ -5,8 +5,10 @@ test.describe("Application Stage", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/favoris");
     await clearIndexedDB(page);
+    await page.reload();
     await seedDatabase(page);
     await page.reload();
+    await expect(page.getByText("Acme Corp")).toBeVisible();
   });
 
   test("displays application stage badges in table", async ({ page }) => {

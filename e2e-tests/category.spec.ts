@@ -8,6 +8,7 @@ test.describe("Categories", () => {
     await page.reload();
     await seedDatabase(page);
     await page.reload();
+    await expect(page.getByText("Statistiques")).toBeVisible();
   });
 
   test("displays category manager", async ({ page }) => {

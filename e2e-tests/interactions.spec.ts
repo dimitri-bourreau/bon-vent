@@ -5,8 +5,10 @@ test.describe("Interactions page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/interactions");
     await clearIndexedDB(page);
+    await page.reload();
     await seedDatabase(page);
     await page.reload();
+    await expect(page.getByText("Nouvelle interaction")).toBeVisible();
   });
 
   test("displays page header", async ({ page }) => {

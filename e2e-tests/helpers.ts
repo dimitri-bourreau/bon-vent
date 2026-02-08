@@ -41,13 +41,6 @@ async function trySeedDatabase(page: Page): Promise<boolean> {
           });
           domainStore.createIndex("by-order", "order");
         }
-        if (!db.objectStoreNames.contains("objectives")) {
-          const objectiveStore = db.createObjectStore("objectives", {
-            keyPath: "id",
-          });
-          objectiveStore.createIndex("by-type", "type");
-          objectiveStore.createIndex("by-week", "weekStart");
-        }
         if (!db.objectStoreNames.contains("interactions")) {
           db.createObjectStore("interactions", { keyPath: "id" });
         }
@@ -56,7 +49,7 @@ async function trySeedDatabase(page: Page): Promise<boolean> {
       req.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
 
-        const storeNames = ["companies", "zones", "domains", "objectives"];
+        const storeNames = ["companies", "zones", "domains"];
         const availableStores = storeNames.filter((name) =>
           db.objectStoreNames.contains(name),
         );
@@ -85,12 +78,6 @@ async function trySeedDatabase(page: Page): Promise<boolean> {
             tx.objectStore("domains").put(domain);
           }
         }
-        if (availableStores.includes("objectives")) {
-          for (const objective of data.objectives) {
-            tx.objectStore("objectives").put(objective);
-          }
-        }
-
         tx.oncomplete = () => {
           clearTimeout(timeout);
           db.close();
@@ -117,11 +104,11 @@ async function trySeedDatabase(page: Page): Promise<boolean> {
 }
 
 export async function seedDatabase(page: Page) {
-  const maxRetries = 5;
+  const maxRetries = 10;
   for (let i = 0; i < maxRetries; i++) {
     const success = await trySeedDatabase(page);
     if (success) return;
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(300);
   }
   throw new Error("seedDatabase failed after retries");
 }

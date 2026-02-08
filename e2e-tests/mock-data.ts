@@ -164,23 +164,10 @@ export const mockCompanies = [
   },
 ];
 
-export const mockObjectives = [
-  {
-    id: "obj-1",
-    type: "contact" as const,
-    target: 5,
-    current: 2,
-    weekStart: new Date(Date.now() - new Date().getDay() * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0],
-  },
-];
-
 export const mockExportData = {
   companies: mockCompanies,
   zones: mockCategories,
   domains: mockDomains,
-  objectives: mockObjectives,
   interactions: [],
   exportedAt: new Date().toISOString(),
   version: 1,

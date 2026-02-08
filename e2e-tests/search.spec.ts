@@ -5,8 +5,10 @@ test.describe("Search", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await clearIndexedDB(page);
+    await page.reload();
     await seedDatabase(page);
     await page.reload();
+    await expect(page.getByText("Statistiques")).toBeVisible();
   });
 
   test("displays search bar on homepage", async ({ page }) => {

@@ -5,8 +5,10 @@ test.describe("Bulk Actions", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/contacts");
     await clearIndexedDB(page);
+    await page.reload();
     await seedDatabase(page);
     await page.reload();
+    await expect(page.getByText("BigBank Inc")).toBeVisible();
   });
 
   test("shows bulk action buttons when items are selected", async ({

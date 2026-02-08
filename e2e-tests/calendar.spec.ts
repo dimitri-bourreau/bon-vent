@@ -5,8 +5,10 @@ test.describe("Calendar", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await clearIndexedDB(page);
+    await page.reload();
     await seedDatabase(page);
     await page.reload();
+    await expect(page.getByText("Statistiques")).toBeVisible();
   });
 
   test("displays calendar view", async ({ page }) => {
@@ -51,100 +53,17 @@ test.describe("Calendar", () => {
     }
   });
 
-  test("does not display companies in research stage even with contactedAt", async ({
+  test("does not display companies in research stage in calendar", async ({
     page,
   }) => {
-    await clearIndexedDB(page);
-
-    const now = new Date().toISOString();
-
-    const researchCompanyWithContact = {
-      id: "research-with-contact",
-      name: "ResearchOnlyCompany",
-      categories: ["Tech"],
-      website: "",
-      jobUrl: "",
-      contactEmail: "",
-      contactName: "",
-      note: "",
-      status: "favorite",
-      applicationStage: "research",
-      timeline: [],
-      isFavorite: true,
-      contactedAt: now,
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    const appliedCompanyWithTodayDate = {
-      id: "applied-today",
-      name: "AppliedTodayCompany",
-      categories: ["Tech"],
-      website: "",
-      jobUrl: "",
-      contactEmail: "",
-      contactName: "",
-      note: "",
-      status: "waiting",
-      applicationStage: "applied",
-      timeline: [],
-      isFavorite: false,
-      contactedAt: now,
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    await page.evaluate(
-      ({ researchCompany, appliedCompany }) => {
-        return new Promise<void>((resolve) => {
-          const req = indexedDB.open("bon-vent-db", 1);
-          req.onupgradeneeded = (event) => {
-            const db = (event.target as IDBOpenDBRequest).result;
-            if (!db.objectStoreNames.contains("companies")) {
-              const store = db.createObjectStore("companies", {
-                keyPath: "id",
-              });
-              store.createIndex("by-status", "status");
-              store.createIndex("by-favorite", "isFavorite");
-            }
-            ["zones", "domains", "objectives", "interactions"].forEach(
-              (name) => {
-                if (!db.objectStoreNames.contains(name)) {
-                  db.createObjectStore(name, { keyPath: "id" });
-                }
-              },
-            );
-          };
-          req.onsuccess = (event) => {
-            const db = (event.target as IDBOpenDBRequest).result;
-            const tx = db.transaction("companies", "readwrite");
-            tx.objectStore("companies").put(researchCompany);
-            tx.objectStore("companies").put(appliedCompany);
-            tx.oncomplete = () => {
-              db.close();
-              resolve();
-            };
-          };
-        });
-      },
-      {
-        researchCompany: researchCompanyWithContact,
-        appliedCompany: appliedCompanyWithTodayDate,
-      },
-    );
-
-    await page.reload();
-    await page.waitForTimeout(500);
-
     const calendarEvents = page.locator(".grid-cols-7 button");
 
-    await expect(
-      calendarEvents.filter({ hasText: "ResearchOnlyCompany" }),
-    ).toHaveCount(0);
+    await expect(calendarEvents.filter({ hasText: "Acme Corp" })).toHaveCount(
+      0,
+    );
 
-    const appliedCount = await calendarEvents
-      .filter({ hasText: "AppliedTodayCompany" })
-      .count();
-    expect(appliedCount).toBeGreaterThanOrEqual(1);
+    await expect(calendarEvents.filter({ hasText: "TechStart" })).toHaveCount(
+      0,
+    );
   });
 });

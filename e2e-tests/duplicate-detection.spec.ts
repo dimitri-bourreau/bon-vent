@@ -5,8 +5,10 @@ test.describe("Duplicate Detection", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/favoris");
     await clearIndexedDB(page);
+    await page.reload();
     await seedDatabase(page);
     await page.reload();
+    await expect(page.getByText("Acme Corp")).toBeVisible();
   });
 
   test("warns when adding company with similar name", async ({ page }) => {

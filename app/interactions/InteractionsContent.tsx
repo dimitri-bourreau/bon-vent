@@ -12,12 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/molecules/PageHeader";
-import {
-  useCompanies,
-  useAddTimelineEvent,
-} from "@/features/companies/hooks/useCompanies";
+import { useCompanies } from "@/hooks/use-companies.hook";
+import { useAddTimelineEvent } from "@/hooks/use-add-timeline-event.hook";
 import { formatRelative } from "@/features/dates/dates";
-import type { TimelineEventType } from "@/features/companies/domain/types";
+import type { TimelineEventType } from "@/features/companies/types/timeline-event-type.type";
 
 const EVENT_TYPES: { value: TimelineEventType; label: string; icon: string }[] =
   [

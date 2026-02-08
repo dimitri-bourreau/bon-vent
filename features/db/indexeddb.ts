@@ -1,8 +1,6 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
-import type {
-  ApplicationStage,
-  TimelineEvent,
-} from "@/features/companies/domain/types";
+import type { ApplicationStage } from "@/features/companies/types/application-stage.type";
+import type { TimelineEvent } from "@/features/companies/types/timeline-event.type";
 
 export interface BonVentDB extends DBSchema {
   companies: {

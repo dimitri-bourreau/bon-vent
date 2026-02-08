@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { subDays } from "date-fns";
-import { useCompanies } from "@/features/companies/hooks/useCompanies";
+import { useCompanies } from "@/hooks/use-companies.hook";
 
 export function StatsOverview() {
   const { data: companies = [] } = useCompanies();

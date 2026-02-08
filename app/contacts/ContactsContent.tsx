@@ -9,13 +9,11 @@ import { ActivityChart } from "@/components/molecules/ActivityChart";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryTabs } from "@/components/organisms/CategoryTabs";
-import {
-  useContacted,
-  useCreateCompany,
-  useOverdue,
-  useWaiting,
-} from "@/features/companies/hooks/useCompanies";
-import type { CreateCompanyDTO } from "@/features/companies/domain/types";
+import { useContacted } from "@/hooks/use-contacted.hook";
+import { useCreateCompany } from "@/hooks/use-create-company.hook";
+import { useOverdue } from "@/hooks/use-overdue.hook";
+import { useWaiting } from "@/hooks/use-waiting.hook";
+import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
 
 export function ContactsContent() {
   const [showForm, setShowForm] = useState(false);

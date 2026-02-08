@@ -14,11 +14,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  useDomains,
-  useCreateDomain,
-  useDeleteDomain,
-} from "@/features/domains/hooks/useDomains";
+import { useDomains } from "@/hooks/use-domains.hook";
+import { useCreateDomain } from "@/hooks/use-create-domain.hook";
+import { useDeleteDomain } from "@/hooks/use-delete-domain.hook";
 
 export function DomainManager() {
   const [newDomain, setNewDomain] = useState("");

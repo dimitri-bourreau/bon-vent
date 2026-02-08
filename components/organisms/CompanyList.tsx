@@ -24,16 +24,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { formatRelative } from "@/features/dates/dates";
-import {
-  useUpdateCompany,
-  useDeleteCompany,
-  useDeleteManyCompanies,
-  useToggleFavorite,
-} from "@/features/companies/hooks/useCompanies";
-import type {
-  Company,
-  CreateCompanyDTO,
-} from "@/features/companies/domain/types";
+import { useUpdateCompany } from "@/hooks/use-update-company.hook";
+import { useDeleteCompany } from "@/hooks/use-delete-company.hook";
+import { useDeleteManyCompanies } from "@/hooks/use-delete-many-companies.hook";
+import { useToggleFavorite } from "@/hooks/use-toggle-favorite.hook";
+import type { Company } from "@/features/companies/types/company.type";
+import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
 
 interface Props {
   companies: Company[];

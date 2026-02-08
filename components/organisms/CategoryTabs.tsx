@@ -2,14 +2,14 @@
 
 import { useQueryState } from "nuqs";
 import { cn } from "@/features/ui/cn";
-import { useZones } from "@/features/zones/hooks/useZones";
+import { useCategories } from "@/hooks/use-categories.hook";
 
 interface Props {
   onCategoryChange?: (category: string | null) => void;
 }
 
 export function CategoryTabs({ onCategoryChange }: Props) {
-  const { data: categories = [] } = useZones();
+  const { data: categories = [] } = useCategories();
   const [category, setCategory] = useQueryState("category");
 
   const handleChange = (value: string) => {

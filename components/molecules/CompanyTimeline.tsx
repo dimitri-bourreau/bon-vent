@@ -11,11 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatRelative } from "@/features/dates/dates";
-import {
-  useAddTimelineEvent,
-  useCompany,
-} from "@/features/companies/hooks/useCompanies";
-import type { TimelineEventType } from "@/features/companies/domain/types";
+import { useAddTimelineEvent } from "@/hooks/use-add-timeline-event.hook";
+import { useCompany } from "@/hooks/use-company.hook";
+import type { TimelineEventType } from "@/features/companies/types/timeline-event-type.type";
 
 const EVENT_TYPES: { value: TimelineEventType; label: string; icon: string }[] =
   [

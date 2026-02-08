@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useSearchCompanies } from "@/features/companies/hooks/useCompanies";
-import type { Company } from "@/features/companies/domain/types";
+import { useSearchCompanies } from "@/hooks/use-search-companies.hook";
+import type { Company } from "@/features/companies/types/company.type";
 
 interface Props {
   onSelect?: (company: Company) => void;

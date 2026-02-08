@@ -15,8 +15,8 @@ import {
 } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
-import { useCompanies } from "@/features/companies/hooks/useCompanies";
-import type { Company } from "@/features/companies/domain/types";
+import { useCompanies } from "@/hooks/use-companies.hook";
+import type { Company } from "@/features/companies/types/company.type";
 
 interface Props {
   onSelectCompany?: (company: Company) => void;

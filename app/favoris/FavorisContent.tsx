@@ -9,11 +9,9 @@ import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryTabs } from "@/components/organisms/CategoryTabs";
 import { DomainManager } from "@/components/organisms/DomainManager";
-import {
-  useFavorites,
-  useCreateCompany,
-} from "@/features/companies/hooks/useCompanies";
-import type { CreateCompanyDTO } from "@/features/companies/domain/types";
+import { useFavorites } from "@/hooks/use-favorites.hook";
+import { useCreateCompany } from "@/hooks/use-create-company.hook";
+import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
 
 export function FavorisContent() {
   const [showForm, setShowForm] = useState(false);

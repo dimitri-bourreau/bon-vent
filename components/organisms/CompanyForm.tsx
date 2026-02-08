@@ -15,12 +15,11 @@ import {
 import { ApplicationStageSelect } from "@/components/molecules/ApplicationStageSelect";
 import { DuplicateWarning } from "@/components/molecules/DuplicateWarning";
 import { CompanyTimeline } from "@/components/molecules/CompanyTimeline";
-import { useZones, useCreateZone } from "@/features/zones/hooks/useZones";
-import type {
-  Company,
-  CreateCompanyDTO,
-  ApplicationStage,
-} from "@/features/companies/domain/types";
+import { useCategories } from "@/hooks/use-categories.hook";
+import { useCreateCategory } from "@/hooks/use-create-category.hook";
+import type { Company } from "@/features/companies/types/company.type";
+import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
+import type { ApplicationStage } from "@/features/companies/types/application-stage.type";
 
 interface Props {
   open: boolean;
@@ -48,8 +47,8 @@ export function CompanyForm({
   onSubmit,
   initialData,
 }: Props) {
-  const { data: categories = [] } = useZones();
-  const createCategory = useCreateZone();
+  const { data: categories = [] } = useCategories();
+  const createCategory = useCreateCategory();
   const [newCategory, setNewCategory] = useState("");
   const [formData, setFormData] = useState<CreateCompanyDTO>(
     getInitialFormData(initialData),

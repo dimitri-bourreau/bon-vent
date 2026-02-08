@@ -3,13 +3,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ObjectiveProgress } from "@/components/molecules/ObjectiveProgress";
 import { cn } from "@/features/ui/cn";
-import {
-  useObjectives,
-  useIncrementObjective,
-  useDecrementObjective,
-} from "@/features/objectives/hooks/useObjectives";
-import { useCreateInteraction } from "@/features/interactions/hooks/useInteractions";
-import type { ObjectiveType } from "@/features/objectives/domain/types";
+import { useObjectives } from "@/hooks/use-objectives.hook";
+import { useIncrementObjective } from "@/hooks/use-increment-objective.hook";
+import { useDecrementObjective } from "@/hooks/use-decrement-objective.hook";
+import { useCreateInteraction } from "@/hooks/use-create-interaction.hook";
+import type { ObjectiveType } from "@/features/objectives/types/objective-type.type";
 
 export function ObjectiveTracker() {
   const { data: objectives = [] } = useObjectives();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useFindDuplicates } from "@/features/companies/hooks/useCompanies";
+import { useFindDuplicates } from "@/hooks/use-find-duplicates.hook";
 
 interface Props {
   name: string;

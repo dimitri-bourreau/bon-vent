@@ -14,12 +14,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  useZones,
-  useCreateZone,
-  useUpdateZone,
-  useDeleteZone,
-} from "@/features/zones/hooks/useZones";
+import { useCategories } from "@/hooks/use-categories.hook";
+import { useCreateCategory } from "@/hooks/use-create-category.hook";
+import { useUpdateCategory } from "@/hooks/use-update-category.hook";
+import { useDeleteCategory } from "@/hooks/use-delete-category.hook";
 
 export function CategoryManager() {
   const [newCategory, setNewCategory] = useState("");
@@ -27,10 +25,10 @@ export function CategoryManager() {
   const [editName, setEditName] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { data: categories = [] } = useZones();
-  const createCategory = useCreateZone();
-  const updateCategory = useUpdateZone();
-  const deleteCategory = useDeleteZone();
+  const { data: categories = [] } = useCategories();
+  const createCategory = useCreateCategory();
+  const updateCategory = useUpdateCategory();
+  const deleteCategory = useDeleteCategory();
 
   const handleAdd = () => {
     if (!newCategory.trim()) return;

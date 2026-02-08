@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/atoms/StatusBadge";
 import { formatRelative } from "@/features/dates/dates";
-import type { Company } from "@/features/companies/domain/types";
+import type { Company } from "@/features/companies/types/company.type";
 
 interface Props {
   company: Company;

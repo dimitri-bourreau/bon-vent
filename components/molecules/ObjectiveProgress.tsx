@@ -1,10 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import type {
-  Objective,
-  ObjectiveType,
-} from "@/features/objectives/domain/types";
+import type { Objective } from "@/features/objectives/types/objective.type";
+import type { ObjectiveType } from "@/features/objectives/types/objective-type.type";
 import { cn } from "@/features/ui/cn";
 
 const TYPE_CONFIG: Record<

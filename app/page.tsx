@@ -10,25 +10,21 @@ import { ObjectiveTracker } from "@/components/organisms/ObjectiveTracker";
 import { CategoryManager } from "@/components/organisms/CategoryManager";
 import { StatsOverview } from "@/components/organisms/StatsOverview";
 import { CalendarView } from "@/components/organisms/CalendarView";
-import {
-  useCompanies,
-  useOverdue,
-  useWaiting,
-  useFavorites,
-  useUpdateCompany,
-} from "@/features/companies/hooks/useCompanies";
-import { useZones } from "@/features/zones/hooks/useZones";
-import type {
-  Company,
-  CreateCompanyDTO,
-} from "@/features/companies/domain/types";
+import { useCompanies } from "@/hooks/use-companies.hook";
+import { useOverdue } from "@/hooks/use-overdue.hook";
+import { useWaiting } from "@/hooks/use-waiting.hook";
+import { useFavorites } from "@/hooks/use-favorites.hook";
+import { useUpdateCompany } from "@/hooks/use-update-company.hook";
+import { useCategories } from "@/hooks/use-categories.hook";
+import type { Company } from "@/features/companies/types/company.type";
+import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
 
 export default function HomePage() {
   const { data: companies = [] } = useCompanies();
   const { data: overdue = [] } = useOverdue();
   const { data: waiting = [] } = useWaiting();
   const { data: favorites = [] } = useFavorites();
-  const { data: categories = [] } = useZones();
+  const { data: categories = [] } = useCategories();
   const updateCompany = useUpdateCompany();
 
   const [editCompany, setEditCompany] = useState<Company | null>(null);

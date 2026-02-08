@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import type { CompanyStatus } from "@/features/companies/domain/types";
+import type { CompanyStatus } from "@/features/companies/types/company-status.type";
 
 const STATUS_CONFIG: Record<
   CompanyStatus,

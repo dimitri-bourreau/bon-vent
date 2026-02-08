@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ApplicationStage } from "@/features/companies/domain/types";
+import type { ApplicationStage } from "@/features/companies/types/application-stage.type";
 
 const STAGES: { value: ApplicationStage; label: string; color: string }[] = [
   { value: "research", label: "Recherche", color: "bg-gray-500" },

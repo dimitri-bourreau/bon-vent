@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/molecules/PageHeader";
 import { StatsCard } from "@/components/molecules/StatsCard";
 import { ActivityChart } from "@/components/molecules/ActivityChart";
 import { CompanyList } from "@/components/organisms/CompanyList";
+import { FavoriteContactsList } from "@/components/organisms/FavoriteContactsList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryTabs } from "@/components/organisms/CategoryTabs";
 import {
@@ -25,9 +26,12 @@ export function ContactsContent() {
   const { data: waiting = [] } = useWaiting();
   const createCompany = useCreateCompany();
 
+  const favoriteContacts = contacted.filter((c) => c.isFavorite);
+  const nonFavoriteContacts = contacted.filter((c) => !c.isFavorite);
+
   const filtered = category
-    ? contacted.filter((c) => c.zone === category)
-    : contacted;
+    ? nonFavoriteContacts.filter((c) => c.zone === category)
+    : nonFavoriteContacts;
 
   const sorted = [...filtered].sort((a, b) => {
     if (!a.contactedAt || !b.contactedAt) return 0;
@@ -60,7 +64,7 @@ export function ContactsContent() {
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <div className="flex items-start justify-between gap-4">
         <PageHeader
-          title="Contacts"
+          title="Entreprises contactées"
           subtitle="Historique de vos prises de contact"
         />
         <Button onClick={() => setShowForm(true)} className="shrink-0">
@@ -91,6 +95,9 @@ export function ContactsContent() {
         </aside>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">
+          {favoriteContacts.length > 0 && (
+            <FavoriteContactsList companies={favoriteContacts} />
+          )}
           <CategoryTabs />
           <CompanyList
             companies={sorted}

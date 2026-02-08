@@ -8,8 +8,8 @@ import { StatsCard } from "@/components/molecules/StatsCard";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryTabs } from "@/components/organisms/CategoryTabs";
+import { CategoryManager } from "@/components/organisms/CategoryManager";
 import { DomainManager } from "@/components/organisms/DomainManager";
-import { DataManager } from "@/components/organisms/DataManager";
 import {
   useFavorites,
   useCreateCompany,
@@ -38,7 +38,10 @@ export function FavorisContent() {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <div className="flex items-start justify-between gap-4">
-        <PageHeader title="Favoris" subtitle="Vos entreprises préférées" />
+        <PageHeader
+          title="Entreprises pour lesquelles j'adorerais travailler"
+          subtitle="Vos entreprises de rêve"
+        />
         <Button onClick={() => setShowForm(true)} className="shrink-0">
           + Ajouter
         </Button>
@@ -48,19 +51,19 @@ export function FavorisContent() {
         <aside className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
             <StatsCard
-              title="Total favoris"
+              title="Total"
               value={favorites.length}
               variant="warning"
             />
             <StatsCard
-              title="Filtrées"
+              title="Affichées"
               value={filtered.length}
               variant="default"
               subtitle={category ?? "Toutes catégories"}
             />
           </div>
+          <CategoryManager />
           <DomainManager />
-          <DataManager />
         </aside>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">

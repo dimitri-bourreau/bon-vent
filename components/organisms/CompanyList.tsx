@@ -74,16 +74,20 @@ export function CompanyList({
             <TableRow>
               <TableHead className="w-10"></TableHead>
               <TableHead>Entreprise</TableHead>
-              <TableHead>Zone</TableHead>
+              <TableHead>Catégorie</TableHead>
               <TableHead>Contact</TableHead>
               <TableHead>Contacté le</TableHead>
-              <TableHead className="w-24"></TableHead>
+              <TableHead className="w-10"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {companies.map((company) => (
-              <TableRow key={company.id}>
-                <TableCell>
+              <TableRow
+                key={company.id}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => setEditCompany(company)}
+              >
+                <TableCell onClick={(e) => e.stopPropagation()}>
                   <button
                     onClick={() => toggleFavorite.mutate(company.id)}
                     className="text-lg"
@@ -100,6 +104,7 @@ export function CompanyList({
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-primary hover:underline"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         ↗
                       </a>
@@ -120,6 +125,7 @@ export function CompanyList({
                     <a
                       href={`mailto:${company.contactEmail}`}
                       className="text-xs text-primary hover:underline"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       {company.contactEmail}
                     </a>
@@ -130,25 +136,15 @@ export function CompanyList({
                     ? formatRelative(company.contactedAt)
                     : "-"}
                 </TableCell>
-                <TableCell>
-                  <div className="flex justify-end gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 px-2 text-xs"
-                      onClick={() => setEditCompany(company)}
-                    >
-                      Modifier
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 w-7 p-0 text-destructive hover:bg-destructive/10"
-                      onClick={() => setDeleteId(company.id)}
-                    >
-                      ×
-                    </Button>
-                  </div>
+                <TableCell onClick={(e) => e.stopPropagation()}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0 text-destructive hover:bg-destructive/10"
+                    onClick={() => setDeleteId(company.id)}
+                  >
+                    ×
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

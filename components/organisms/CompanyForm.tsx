@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,6 +55,13 @@ export function CompanyForm({
     getInitialFormData(initialData),
   );
 
+  useEffect(() => {
+    if (open) {
+      setFormData(getInitialFormData(initialData));
+      setNewZone("");
+    }
+  }, [open, initialData]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -70,11 +77,7 @@ export function CompanyForm({
   };
 
   return (
-    <Dialog
-      key={`${open}-${initialData?.id}`}
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>

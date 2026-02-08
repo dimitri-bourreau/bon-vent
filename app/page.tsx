@@ -44,17 +44,29 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <PageHeader
-        title="Tableau de bord"
-        subtitle="Vue d'ensemble de votre prospection"
-        showLogo
-      />
+      <PageHeader showLogo />
 
       <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr]">
         <aside className="flex flex-col gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">
+              Tableau de bord
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Vue d&apos;ensemble de votre prospection
+            </p>
+          </div>
           <div className="grid grid-cols-2 gap-3">
-            <StatsCard title="Total" value={companies.length} variant="default" />
-            <StatsCard title="Favoris" value={favorites.length} variant="warning" />
+            <StatsCard
+              title="Total"
+              value={companies.length}
+              variant="default"
+            />
+            <StatsCard
+              title="Favoris"
+              value={favorites.length}
+              variant="warning"
+            />
             <StatsCard
               title="Contactées"
               value={contacted.length}
@@ -72,7 +84,11 @@ export default function HomePage() {
           <ActivityChart title="Par statut" data={statusData} type="donut" />
           <ObjectiveTracker />
           {categoryData.length > 0 && (
-            <ActivityChart title="Par catégorie" data={categoryData} type="bar" />
+            <ActivityChart
+              title="Par catégorie"
+              data={categoryData}
+              type="bar"
+            />
           )}
         </aside>
 
@@ -80,8 +96,8 @@ export default function HomePage() {
           {overdue.length > 0 && (
             <section>
               <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-                <span className="h-2 w-2 rounded-full bg-destructive" />À relancer (
-                {overdue.length})
+                <span className="h-2 w-2 rounded-full bg-destructive" />À
+                relancer ({overdue.length})
               </h2>
               <CompanyList
                 companies={overdue}

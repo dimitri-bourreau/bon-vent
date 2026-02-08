@@ -78,7 +78,7 @@ export function Navigation() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleExport}
-            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground flex gap-2"
             title="Exporter"
           >
             <svg
@@ -94,10 +94,11 @@ export function Navigation() {
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
               />
             </svg>
+            Exporter
           </button>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground flex gap-2"
             title="Importer"
           >
             <svg
@@ -113,6 +114,7 @@ export function Navigation() {
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
               />
             </svg>
+            Importer
           </button>
           <input
             ref={fileInputRef}

@@ -12,7 +12,6 @@ import { CategoryTabs } from "@/components/organisms/CategoryTabs";
 import { useContacted } from "@/hooks/use-contacted.hook";
 import { useCreateCompany } from "@/hooks/use-create-company.hook";
 import { useOverdue } from "@/hooks/use-overdue.hook";
-import { useWaiting } from "@/hooks/use-waiting.hook";
 import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
 
 export function ContactsContent() {
@@ -20,7 +19,6 @@ export function ContactsContent() {
   const [category] = useQueryState("category");
   const { data: contacted = [] } = useContacted();
   const { data: overdue = [] } = useOverdue();
-  const { data: waiting = [] } = useWaiting();
   const createCompany = useCreateCompany();
 
   const filtered = category
@@ -32,17 +30,24 @@ export function ContactsContent() {
     return b.contactedAt.localeCompare(a.contactedAt);
   });
 
+  const actuallyContacted = contacted.filter((c) => c.contactedAt);
+  const applied = contacted.filter((c) => c.applicationStage === "applied");
+  const rejected = contacted.filter((c) => c.applicationStage === "rejected");
+  const interviewing = contacted.filter(
+    (c) =>
+      c.applicationStage === "interview" ||
+      c.applicationStage === "offer" ||
+      c.applicationStage === "accepted",
+  );
+
   const statusData = useMemo(
     () => [
-      {
-        label: "Répondu",
-        value: contacted.length - waiting.length - overdue.length,
-        color: "#22c55e",
-      },
-      { label: "En attente", value: waiting.length, color: "#06b6d4" },
-      { label: "À relancer", value: overdue.length, color: "#ef4444" },
+      { label: "Postulé", value: applied.length, color: "#06b6d4" },
+      { label: "En cours", value: interviewing.length, color: "#22c55e" },
+      { label: "Refusé", value: rejected.length, color: "#ef4444" },
+      { label: "À relancer", value: overdue.length, color: "#f59e0b" },
     ],
-    [contacted.length, waiting.length, overdue.length],
+    [applied.length, interviewing.length, rejected.length, overdue.length],
   );
 
   const handleCreate = (data: CreateCompanyDTO) => {
@@ -63,28 +68,28 @@ export function ContactsContent() {
 
       <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr] px-8">
         <aside className="flex flex-col gap-4">
-          <div className="grid grid-cols-3 gap-3 lg:grid-cols-1">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
             <StatsCard
               title="Contactées"
-              value={contacted.length}
+              value={actuallyContacted.length}
               variant="primary"
             />
             <StatsCard
-              title="En attente"
-              value={waiting.length}
+              title="Postulé"
+              value={applied.length}
               variant="default"
             />
             <StatsCard
-              title="À relancer"
-              value={overdue.length}
+              title="En cours"
+              value={interviewing.length}
+              variant="success"
+            />
+            <StatsCard
+              title="Refusé"
+              value={rejected.length}
               variant="danger"
             />
           </div>
-          <ActivityChart
-            title="Statut des contacts"
-            data={statusData}
-            type="donut"
-          />
         </aside>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">

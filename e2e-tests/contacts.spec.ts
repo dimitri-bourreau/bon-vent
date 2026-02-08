@@ -14,10 +14,22 @@ test.describe("Contacts page", () => {
     await expect(page.getByText("Recent Contact")).toBeVisible();
   });
 
-  test("displays stats cards", async ({ page }) => {
-    await expect(page.locator("aside")).toContainText("Contactées");
-    await expect(page.locator("aside")).toContainText("En attente");
-    await expect(page.locator("aside")).toContainText("À relancer");
+  test("displays stats cards with correct values", async ({ page }) => {
+    const aside = page.locator("aside");
+
+    await expect(aside.getByText("Contactées")).toBeVisible();
+    await expect(aside.getByText("Postulé")).toBeVisible();
+    await expect(aside.getByText("En cours")).toBeVisible();
+    await expect(aside.getByText("Refusé")).toBeVisible();
+
+    const statsCards = aside.locator('[class*="text-2xl"]');
+    const statsTexts = await statsCards.allTextContents();
+    const statsValues = statsTexts.map((text) => parseInt(text, 10));
+
+    expect(statsValues[0]).toBe(4);
+    expect(statsValues[1]).toBe(2);
+    expect(statsValues[2]).toBe(2);
+    expect(statsValues[3]).toBe(0);
   });
 
   test("creates contacted company with date", async ({ page }) => {

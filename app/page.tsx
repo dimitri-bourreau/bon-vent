@@ -56,6 +56,7 @@ export default function HomePage() {
               Vue d&apos;ensemble de votre prospection
             </p>
           </div>
+          <ObjectiveTracker />
           <div className="grid grid-cols-2 gap-3">
             <StatsCard
               title="Total"
@@ -82,7 +83,6 @@ export default function HomePage() {
             />
           </div>
           <ActivityChart title="Par statut" data={statusData} type="donut" />
-          <ObjectiveTracker />
           {categoryData.length > 0 && (
             <ActivityChart
               title="Par catégorie"

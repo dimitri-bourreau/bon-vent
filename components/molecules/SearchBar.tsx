@@ -25,7 +25,7 @@ export function SearchBar({ onSelect }: Props) {
         placeholder="Rechercher..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full"
+        className="w-full bg-white"
       />
       {showResults && (
         <ul className="absolute z-50 mt-1 w-full rounded-md border bg-popover p-1 shadow-md">

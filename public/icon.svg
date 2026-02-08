@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="windGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bgGradient)"/>
+  <path d="M256 80C256 80 128 160 128 288C128 358.7 185.3 416 256 416C326.7 416 384 358.7 384 288C384 160 256 80 256 80Z" fill="white"/>
+  <path d="M256 432V96" stroke="white" stroke-width="24" stroke-linecap="round"/>
+  <path d="M64 192C96 176 128 176 160 192" stroke="url(#windGrad)" stroke-width="20" stroke-linecap="round"/>
+  <path d="M48 256C80 240 112 240 144 256" stroke="url(#windGrad)" stroke-width="20" stroke-linecap="round"/>
+  <path d="M80 320C112 304 144 304 176 320" stroke="url(#windGrad)" stroke-width="20" stroke-linecap="round"/>
+</svg>

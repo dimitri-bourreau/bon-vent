@@ -1,0 +1,16 @@
+{
+  "name": "Bon vent ! - Prospection Freelance",
+  "short_name": "Bon vent !",
+  "description": "Application de suivi de prospection pour freelances et chercheurs d'emploi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

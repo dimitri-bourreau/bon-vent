@@ -1,65 +1,105 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useMemo } from "react";
+import { PageHeader } from "@/components/molecules/PageHeader";
+import { StatsCard } from "@/components/molecules/StatsCard";
+import { ActivityChart } from "@/components/molecules/ActivityChart";
+import { CompanyList } from "@/components/organisms/CompanyList";
+import { ObjectiveTracker } from "@/components/organisms/ObjectiveTracker";
+import {
+  useCompanies,
+  useOverdue,
+  useWaiting,
+  useFavorites,
+} from "@/features/companies/hooks/useCompanies";
+import { useZones } from "@/features/zones/hooks/useZones";
+
+export default function HomePage() {
+  const { data: companies = [] } = useCompanies();
+  const { data: overdue = [] } = useOverdue();
+  const { data: waiting = [] } = useWaiting();
+  const { data: favorites = [] } = useFavorites();
+  const { data: zones = [] } = useZones();
+
+  const contacted = companies.filter((c) => c.contactedAt);
+
+  const zoneData = useMemo(() => {
+    const colors = ["#6366f1", "#06b6d4", "#22c55e", "#f59e0b", "#ec4899"];
+    return zones.slice(0, 5).map((zone, i) => ({
+      label: zone.name,
+      value: companies.filter((c) => c.zone === zone.name).length,
+      color: colors[i % colors.length],
+    }));
+  }, [zones, companies]);
+
+  const statusData = useMemo(
+    () => [
+      { label: "Favoris", value: favorites.length, color: "#f59e0b" },
+      { label: "Contactées", value: contacted.length, color: "#6366f1" },
+      { label: "En attente", value: waiting.length, color: "#06b6d4" },
+      { label: "À relancer", value: overdue.length, color: "#ef4444" },
+    ],
+    [favorites.length, contacted.length, waiting.length, overdue.length],
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="space-y-6">
+      <PageHeader
+        title="Tableau de bord"
+        subtitle="Vue d'ensemble de votre prospection"
+        showLogo
+      />
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatsCard title="Total" value={companies.length} variant="default" />
+        <StatsCard title="Favoris" value={favorites.length} variant="warning" />
+        <StatsCard
+          title="Contactées"
+          value={contacted.length}
+          variant="primary"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        <StatsCard
+          title="En attente"
+          value={waiting.length + overdue.length}
+          variant={overdue.length > 0 ? "danger" : "success"}
+          subtitle={
+            overdue.length > 0 ? `${overdue.length} à relancer` : undefined
+          }
+        />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <ActivityChart title="Par statut" data={statusData} type="donut" />
+        <ObjectiveTracker />
+      </div>
+
+      {zoneData.length > 0 && (
+        <ActivityChart title="Par zone" data={zoneData} type="bar" />
+      )}
+
+      {overdue.length > 0 && (
+        <section>
+          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+            <span className="h-2 w-2 rounded-full bg-destructive" />À relancer (
+            {overdue.length})
+          </h2>
+          <CompanyList
+            companies={overdue}
+            emptyMessage="Aucune relance nécessaire"
+          />
+        </section>
+      )}
+
+      <section>
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+          <span className="h-2 w-2 rounded-full bg-chart-2" />
+          Réponses en attente ({waiting.length})
+        </h2>
+        <CompanyList
+          companies={waiting}
+          emptyMessage="Aucune réponse en attente"
+        />
+      </section>
     </div>
   );
 }

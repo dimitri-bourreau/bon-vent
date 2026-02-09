@@ -46,17 +46,13 @@ When adding new fields to types:
 
 ### Preventing Test Failures
 
-**Before modifying any feature:**
+**After each code modification:**
 
-1. Run `npm test` to ensure tests pass before changes
-2. Note which tests touch the feature you're modifying
-
-**After modifying a feature:**
-
-1. If you changed UI text, update test assertions to match
-2. If you added required fields to types, update mock data
-3. If you renamed/removed elements, update selectors
-4. Run `npm test` before considering the task complete
+1. Search for related e2e tests in `e2e-tests/` using Grep
+2. Verify that existing test assertions won't break
+3. If UI text changed, update test assertions to match
+4. If required fields added to types, update mock data
+5. If elements renamed/removed, update selectors
 
 **When tests fail unexpectedly:**
 

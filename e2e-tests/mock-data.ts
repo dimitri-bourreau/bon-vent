@@ -37,6 +37,7 @@ export const mockCompanies = [
     applicationStage: "research" as const,
     timeline: [],
     isFavorite: true,
+    skipFollowUp: false,
     createdAt: "2024-01-01T00:00:00.000Z",
     updatedAt: "2024-01-01T00:00:00.000Z",
   },
@@ -53,6 +54,7 @@ export const mockCompanies = [
     applicationStage: "research" as const,
     timeline: [],
     isFavorite: true,
+    skipFollowUp: false,
     createdAt: "2024-01-02T00:00:00.000Z",
     updatedAt: "2024-01-02T00:00:00.000Z",
   },
@@ -69,6 +71,7 @@ export const mockCompanies = [
     applicationStage: "research" as const,
     timeline: [],
     isFavorite: true,
+    skipFollowUp: false,
     createdAt: "2024-01-03T00:00:00.000Z",
     updatedAt: "2024-01-03T00:00:00.000Z",
   },
@@ -94,6 +97,7 @@ export const mockCompanies = [
     ],
     contactedAt: "2024-01-10T00:00:00.000Z",
     isFavorite: false,
+    skipFollowUp: false,
     createdAt: "2024-01-04T00:00:00.000Z",
     updatedAt: "2024-01-10T00:00:00.000Z",
   },
@@ -118,6 +122,7 @@ export const mockCompanies = [
     ],
     contactedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
     isFavorite: false,
+    skipFollowUp: false,
     createdAt: "2024-01-05T00:00:00.000Z",
     updatedAt: "2024-01-05T00:00:00.000Z",
   },
@@ -142,6 +147,7 @@ export const mockCompanies = [
     ],
     contactedAt: "2024-01-15T00:00:00.000Z",
     isFavorite: false,
+    skipFollowUp: false,
     createdAt: "2024-01-06T00:00:00.000Z",
     updatedAt: "2024-01-15T00:00:00.000Z",
   },
@@ -159,8 +165,20 @@ export const mockCompanies = [
     timeline: [],
     contactedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     isFavorite: false,
+    skipFollowUp: false,
     createdAt: "2024-01-07T00:00:00.000Z",
     updatedAt: "2024-01-07T00:00:00.000Z",
+  },
+];
+
+export const mockGithubRepos = [
+  {
+    id: "repo-1",
+    owner: "facebook",
+    name: "react",
+    fullName: "facebook/react",
+    url: "https://github.com/facebook/react",
+    addedAt: "2024-01-01T00:00:00.000Z",
   },
 ];
 
@@ -169,6 +187,7 @@ export const mockExportData = {
   zones: mockCategories,
   domains: mockDomains,
   interactions: [],
+  githubRepos: mockGithubRepos,
   exportedAt: new Date().toISOString(),
-  version: 1,
+  version: 3,
 };

@@ -17,6 +17,7 @@ export interface Company {
   contactedAt?: string;
   lastInteractionAt?: string;
   isFavorite: boolean;
+  skipFollowUp?: boolean;
   createdAt: string;
   updatedAt: string;
 }

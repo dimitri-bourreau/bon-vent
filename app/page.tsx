@@ -4,13 +4,13 @@ import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/molecules/PageHeader";
 import { SearchBar } from "@/components/molecules/SearchBar";
 import { ActivityChart } from "@/components/molecules/ActivityChart";
-import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryManager } from "@/components/organisms/CategoryManager";
 import { StatsOverview } from "@/components/organisms/StatsOverview";
 import { CalendarView } from "@/components/organisms/CalendarView";
+import { FollowUpSection } from "@/components/organisms/FollowUpSection";
+import { AwaitingResponseSection } from "@/components/organisms/AwaitingResponseSection";
 import { useCompanies } from "@/hooks/use-companies.hook";
-import { useOverdue } from "@/hooks/use-overdue.hook";
 import { useUpdateCompany } from "@/hooks/use-update-company.hook";
 import { useCategories } from "@/hooks/use-categories.hook";
 import type { Company } from "@/features/companies/types/company.type";
@@ -18,7 +18,6 @@ import type { CreateCompanyDTO } from "@/features/companies/types/create-company
 
 export default function HomePage() {
   const { data: companies = [] } = useCompanies();
-  const { data: overdue = [] } = useOverdue();
   const { data: categories = [] } = useCategories();
   const updateCompany = useUpdateCompany();
 
@@ -63,19 +62,8 @@ export default function HomePage() {
 
         <div className="flex min-h-0 flex-col gap-6 overflow-auto">
           <CalendarView onSelectCompany={setEditCompany} />
-
-          {overdue.length > 0 && (
-            <section>
-              <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-                <span className="h-2 w-2 rounded-full bg-destructive" />À
-                relancer ({overdue.length})
-              </h2>
-              <CompanyList
-                companies={overdue}
-                emptyMessage="Aucune relance nécessaire"
-              />
-            </section>
-          )}
+          <FollowUpSection />
+          <AwaitingResponseSection />
         </div>
       </div>
 

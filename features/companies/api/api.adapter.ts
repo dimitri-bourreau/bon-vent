@@ -44,8 +44,15 @@ export class CompanyApiAdapter implements CompanyRepository {
       (c) =>
         c.status === "waiting" &&
         c.contactedAt &&
+        c.applicationStage !== "rejected" &&
+        !c.skipFollowUp &&
         isOverdue(c.contactedAt, days),
     );
+  }
+
+  async getAwaitingResponse(): Promise<Company[]> {
+    const all = await this.getAll();
+    return all.filter((c) => c.applicationStage === "applied" && c.contactedAt);
   }
 
   async getWaiting(): Promise<Company[]> {

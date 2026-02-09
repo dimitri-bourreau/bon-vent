@@ -163,22 +163,41 @@ async function fetchFromApi(
     query += ' label:"good first issue"';
   }
 
-  const params = new URLSearchParams({
-    q: query,
-    per_page: "30",
-    sort: "created",
-    order: "desc",
-  });
+  const allItems: GithubApiIssue[] = [];
+  let page = 1;
+  const maxPages = 3;
 
-  const url = `https://api.github.com/search/issues?${params}`;
-  const response = await fetch(url, { headers });
+  while (page <= maxPages) {
+    const params = new URLSearchParams({
+      q: query,
+      per_page: "100",
+      page: page.toString(),
+      sort: "created",
+      order: "desc",
+    });
 
-  if (!response.ok) {
-    return { ok: false, status: response.status, data: [] };
+    const url = `https://api.github.com/search/issues?${params}`;
+    const response = await fetch(url, { headers });
+
+    if (!response.ok) {
+      if (allItems.length > 0) {
+        return { ok: true, data: allItems };
+      }
+      return { ok: false, status: response.status, data: [] };
+    }
+
+    const data: { items: GithubApiIssue[]; total_count: number } =
+      await response.json();
+    allItems.push(...data.items);
+
+    if (data.items.length < 100 || allItems.length >= data.total_count) {
+      break;
+    }
+
+    page++;
   }
 
-  const data: { items: GithubApiIssue[] } = await response.json();
-  return { ok: true, data: data.items };
+  return { ok: true, data: allItems };
 }
 
 function mapApiIssues(

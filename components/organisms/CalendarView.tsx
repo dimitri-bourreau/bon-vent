@@ -104,7 +104,7 @@ export function CalendarView({ onSelectCompany }: Props) {
           return (
             <div
               key={key}
-              className={`min-h-[60px] rounded-md border p-1 text-xs ${
+              className={`h-16 rounded-md border p-1 text-xs ${
                 isCurrentMonth ? "bg-background" : "bg-muted/30"
               } ${isToday(day) ? "border-primary" : "border-transparent"}`}
             >

@@ -1,6 +1,6 @@
 import { getDB } from "./indexeddb";
 
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 export async function exportAllData(): Promise<string> {
   const db = await getDB();
@@ -10,6 +10,7 @@ export async function exportAllData(): Promise<string> {
     domains: await db.getAll("domains"),
     objectives: await db.getAll("objectives"),
     interactions: await db.getAll("interactions"),
+    githubRepos: await db.getAll("github-repos"),
     exportedAt: new Date().toISOString(),
     version: DB_VERSION,
   };
@@ -21,7 +22,14 @@ export async function importAllData(jsonString: string): Promise<void> {
   const db = await getDB();
 
   const tx = db.transaction(
-    ["companies", "zones", "domains", "objectives", "interactions"],
+    [
+      "companies",
+      "zones",
+      "domains",
+      "objectives",
+      "interactions",
+      "github-repos",
+    ],
     "readwrite",
   );
 
@@ -31,6 +39,7 @@ export async function importAllData(jsonString: string): Promise<void> {
     tx.objectStore("domains").clear(),
     tx.objectStore("objectives").clear(),
     tx.objectStore("interactions").clear(),
+    tx.objectStore("github-repos").clear(),
   ]);
 
   for (const company of data.companies || []) {
@@ -47,6 +56,9 @@ export async function importAllData(jsonString: string): Promise<void> {
   }
   for (const interaction of data.interactions || []) {
     await tx.objectStore("interactions").put(interaction);
+  }
+  for (const repo of data.githubRepos || []) {
+    await tx.objectStore("github-repos").put(repo);
   }
 
   await tx.done;

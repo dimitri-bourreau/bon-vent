@@ -12,5 +12,6 @@ export interface CreateCompanyDTO {
   status?: CompanyStatus;
   applicationStage?: ApplicationStage;
   isFavorite?: boolean;
+  skipFollowUp?: boolean;
   contactedAt?: string;
 }

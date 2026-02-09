@@ -104,7 +104,7 @@ export function CalendarView({ onSelectCompany }: Props) {
           return (
             <div
               key={key}
-              className={`h-16 rounded-md border p-1 text-xs ${
+              className={`h-24 overflow-y-auto rounded-md border p-1 text-xs ${
                 isCurrentMonth ? "bg-background" : "bg-muted/30"
               } ${isToday(day) ? "border-primary" : "border-transparent"}`}
             >
@@ -113,7 +113,7 @@ export function CalendarView({ onSelectCompany }: Props) {
               >
                 {format(day, "d")}
               </div>
-              {events.slice(0, 2).map((evt) => (
+              {events.map((evt) => (
                 <button
                   key={`${evt.company.id}-${evt.type}`}
                   type="button"
@@ -128,11 +128,6 @@ export function CalendarView({ onSelectCompany }: Props) {
                   {evt.company.name}
                 </button>
               ))}
-              {events.length > 2 && (
-                <span className="text-[10px] text-muted-foreground">
-                  +{events.length - 2}
-                </span>
-              )}
             </div>
           );
         })}

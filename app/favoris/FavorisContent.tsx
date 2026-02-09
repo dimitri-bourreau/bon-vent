@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQueryState } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/molecules/PageHeader";
+import { SearchBar } from "@/components/molecules/SearchBar";
 import { StatsCard } from "@/components/molecules/StatsCard";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
@@ -11,13 +12,17 @@ import { CategoryTabs } from "@/components/organisms/CategoryTabs";
 import { DomainManager } from "@/components/organisms/DomainManager";
 import { useFavorites } from "@/hooks/use-favorites.hook";
 import { useCreateCompany } from "@/hooks/use-create-company.hook";
+import { useUpdateCompany } from "@/hooks/use-update-company.hook";
+import type { Company } from "@/features/companies/types/company.type";
 import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
 
 export function FavorisContent() {
   const [showForm, setShowForm] = useState(false);
+  const [editCompany, setEditCompany] = useState<Company | null>(null);
   const [category] = useQueryState("category");
   const { data: favorites = [] } = useFavorites();
   const createCompany = useCreateCompany();
+  const updateCompany = useUpdateCompany();
 
   const filtered = category
     ? favorites.filter((c) => c.categories.includes(category))
@@ -32,12 +37,20 @@ export function FavorisContent() {
     setShowForm(false);
   };
 
+  const handleUpdate = (data: CreateCompanyDTO) => {
+    if (!editCompany) return;
+    updateCompany.mutate({ id: editCompany.id, ...data });
+    setEditCompany(null);
+  };
+
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <PageHeader
         title="Entreprises inspirantes"
         subtitle="Des entreprises que j'admire pour guider ma recherche"
-      />
+      >
+        <SearchBar onSelect={setEditCompany} />
+      </PageHeader>
 
       <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[320px_1fr] px-8">
         <aside className="flex flex-col gap-4">
@@ -79,6 +92,13 @@ export function FavorisContent() {
         open={showForm}
         onOpenChange={setShowForm}
         onSubmit={handleCreate}
+      />
+
+      <CompanyForm
+        open={!!editCompany}
+        onOpenChange={(open) => !open && setEditCompany(null)}
+        onSubmit={handleUpdate}
+        initialData={editCompany ?? undefined}
       />
     </div>
   );

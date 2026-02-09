@@ -12,9 +12,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/molecules/PageHeader";
+import { SearchBar } from "@/components/molecules/SearchBar";
+import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { useCompanies } from "@/hooks/use-companies.hook";
 import { useAddTimelineEvent } from "@/hooks/use-add-timeline-event.hook";
+import { useUpdateCompany } from "@/hooks/use-update-company.hook";
 import { formatRelative } from "@/features/dates/dates";
+import type { Company } from "@/features/companies/types/company.type";
+import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
 import type { TimelineEventType } from "@/features/companies/types/timeline-event-type.type";
 
 const EVENT_TYPES: { value: TimelineEventType; label: string; icon: string }[] =
@@ -31,11 +36,13 @@ const EVENT_TYPES: { value: TimelineEventType; label: string; icon: string }[] =
 export function InteractionsContent() {
   const { data: companies = [] } = useCompanies();
   const addEvent = useAddTimelineEvent();
+  const updateCompany = useUpdateCompany();
 
   const [companyId, setCompanyId] = useState("");
   const [type, setType] = useState<TimelineEventType>("email_received");
   const [content, setContent] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [editCompany, setEditCompany] = useState<Company | null>(null);
 
   const allEvents = useMemo(() => {
     const events: {
@@ -78,12 +85,20 @@ export function InteractionsContent() {
     setCompanyId("");
   };
 
+  const handleUpdate = (data: CreateCompanyDTO) => {
+    if (!editCompany) return;
+    updateCompany.mutate({ id: editCompany.id, ...data });
+    setEditCompany(null);
+  };
+
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <PageHeader
         title="Interactions"
         subtitle="Déclarez vos échanges avec les entreprises"
-      />
+      >
+        <SearchBar onSelect={setEditCompany} />
+      </PageHeader>
 
       <div className="grid min-h-0 flex-1 gap-6 px-8 lg:grid-cols-[400px_1fr]">
         <aside className="flex flex-col gap-4">
@@ -185,6 +200,13 @@ export function InteractionsContent() {
           )}
         </div>
       </div>
+
+      <CompanyForm
+        open={!!editCompany}
+        onOpenChange={(open) => !open && setEditCompany(null)}
+        onSubmit={handleUpdate}
+        initialData={editCompany ?? undefined}
+      />
     </div>
   );
 }

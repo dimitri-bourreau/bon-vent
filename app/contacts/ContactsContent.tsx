@@ -1,24 +1,21 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useQueryState } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/molecules/PageHeader";
 import { StatsCard } from "@/components/molecules/StatsCard";
-import { ActivityChart } from "@/components/molecules/ActivityChart";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryTabs } from "@/components/organisms/CategoryTabs";
 import { useContacted } from "@/hooks/use-contacted.hook";
 import { useCreateCompany } from "@/hooks/use-create-company.hook";
-import { useOverdue } from "@/hooks/use-overdue.hook";
 import type { CreateCompanyDTO } from "@/features/companies/types/create-company-dto.type";
 
 export function ContactsContent() {
   const [showForm, setShowForm] = useState(false);
   const [category] = useQueryState("category");
   const { data: contacted = [] } = useContacted();
-  const { data: overdue = [] } = useOverdue();
   const createCompany = useCreateCompany();
 
   const filtered = category
@@ -38,16 +35,6 @@ export function ContactsContent() {
       c.applicationStage === "interview" ||
       c.applicationStage === "offer" ||
       c.applicationStage === "accepted",
-  );
-
-  const statusData = useMemo(
-    () => [
-      { label: "Postulé", value: applied.length, color: "#06b6d4" },
-      { label: "En cours", value: interviewing.length, color: "#22c55e" },
-      { label: "Refusé", value: rejected.length, color: "#ef4444" },
-      { label: "À relancer", value: overdue.length, color: "#f59e0b" },
-    ],
-    [applied.length, interviewing.length, rejected.length, overdue.length],
   );
 
   const handleCreate = (data: CreateCompanyDTO) => {

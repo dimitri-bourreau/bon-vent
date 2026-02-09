@@ -11,8 +11,6 @@ import { StatsOverview } from "@/components/organisms/StatsOverview";
 import { CalendarView } from "@/components/organisms/CalendarView";
 import { useCompanies } from "@/hooks/use-companies.hook";
 import { useOverdue } from "@/hooks/use-overdue.hook";
-import { useWaiting } from "@/hooks/use-waiting.hook";
-import { useFavorites } from "@/hooks/use-favorites.hook";
 import { useUpdateCompany } from "@/hooks/use-update-company.hook";
 import { useCategories } from "@/hooks/use-categories.hook";
 import type { Company } from "@/features/companies/types/company.type";
@@ -21,14 +19,10 @@ import type { CreateCompanyDTO } from "@/features/companies/types/create-company
 export default function HomePage() {
   const { data: companies = [] } = useCompanies();
   const { data: overdue = [] } = useOverdue();
-  const { data: waiting = [] } = useWaiting();
-  const { data: favorites = [] } = useFavorites();
   const { data: categories = [] } = useCategories();
   const updateCompany = useUpdateCompany();
 
   const [editCompany, setEditCompany] = useState<Company | null>(null);
-
-  const contacted = companies.filter((c) => c.contactedAt);
 
   const categoryData = useMemo(() => {
     const colors = ["#6366f1", "#06b6d4", "#22c55e", "#f59e0b", "#ec4899"];
@@ -38,16 +32,6 @@ export default function HomePage() {
       color: colors[i % colors.length],
     }));
   }, [categories, companies]);
-
-  const statusData = useMemo(
-    () => [
-      { label: "Favoris", value: favorites.length, color: "#f59e0b" },
-      { label: "Contactées", value: contacted.length, color: "#6366f1" },
-      { label: "En attente", value: waiting.length, color: "#06b6d4" },
-      { label: "À relancer", value: overdue.length, color: "#ef4444" },
-    ],
-    [favorites.length, contacted.length, waiting.length, overdue.length],
-  );
 
   const handleUpdate = (data: CreateCompanyDTO) => {
     if (!editCompany) return;

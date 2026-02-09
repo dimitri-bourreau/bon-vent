@@ -10,6 +10,7 @@ Application de suivi de prospection pour freelances et chercheurs d'emploi.
 - **Favoris** : Entreprises inspirantes qui guident votre recherche
 - **Contacts** : Historique de vos candidatures avec suivi des statuts
 - **Interactions** : Déclarez vos échanges (emails, appels, entretiens) avec historique global
+- **GitHub Issues** : Agrégez les issues de repos open source auxquels contribuer, filtrez par "good first issue"
 - **Catégories** : Organisez vos prospects par domaine
 - **Objectifs quotidiens** : Suivez vos interactions (commentaires, messages, prises de contact)
 - **Export/Import** : Sauvegardez et restaurez vos données en JSON
@@ -55,6 +56,7 @@ features/                     # Logique métier par domaine
 ├── domains/
 ├── objectives/
 ├── interactions/
+├── github/                   # Suivi repos GitHub
 └── db/                       # Configuration IndexedDB
 
 hooks/                        # Hooks React Query (interface)
@@ -72,7 +74,8 @@ app/                          # Pages Next.js
 ├── page.tsx
 ├── favoris/
 ├── contacts/
-└── interactions/
+├── interactions/
+└── github/
 ```
 
 ### Flux de données

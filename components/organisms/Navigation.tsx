@@ -35,6 +35,12 @@ const NAV_ITEMS = [
     shortLabel: "Interactions",
     icon: "message" as const,
   },
+  {
+    href: "/github",
+    label: "GitHub Issues",
+    shortLabel: "GitHub",
+    icon: "github" as const,
+  },
 ];
 
 export function Navigation() {

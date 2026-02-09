@@ -62,10 +62,58 @@ export interface BonVentDB extends DBSchema {
     };
     indexes: { "by-type": string; "by-date": string };
   };
+  "github-repos": {
+    key: string;
+    value: {
+      id: string;
+      owner: string;
+      name: string;
+      fullName: string;
+      url: string;
+      addedAt: string;
+    };
+    indexes: { "by-added-at": string };
+  };
+  settings: {
+    key: string;
+    value: {
+      key: string;
+      value: string;
+    };
+  };
+  "github-issues-cache": {
+    key: string;
+    value: {
+      repoFullName: string;
+      issues: Array<{
+        id: number;
+        number: number;
+        title: string;
+        url: string;
+        labels: string[];
+        state: string;
+        createdAt: string;
+        repositoryFullName: string;
+        comments: number;
+      }>;
+      goodFirstIssues: Array<{
+        id: number;
+        number: number;
+        title: string;
+        url: string;
+        labels: string[];
+        state: string;
+        createdAt: string;
+        repositoryFullName: string;
+        comments: number;
+      }>;
+      fetchedAt: string;
+    };
+  };
 }
 
 const DB_NAME = "bon-vent-db";
-const DB_VERSION = 1;
+const DB_VERSION = 3;
 
 let dbInstance: IDBPDatabase<BonVentDB> | null = null;
 
@@ -73,28 +121,47 @@ export async function getDB(): Promise<IDBPDatabase<BonVentDB>> {
   if (dbInstance) return dbInstance;
 
   dbInstance = await openDB<BonVentDB>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      const companyStore = db.createObjectStore("companies", { keyPath: "id" });
-      companyStore.createIndex("by-status", "status");
-      companyStore.createIndex("by-favorite", "isFavorite");
+    upgrade(db, oldVersion) {
+      if (oldVersion < 1) {
+        const companyStore = db.createObjectStore("companies", {
+          keyPath: "id",
+        });
+        companyStore.createIndex("by-status", "status");
+        companyStore.createIndex("by-favorite", "isFavorite");
 
-      const zoneStore = db.createObjectStore("zones", { keyPath: "id" });
-      zoneStore.createIndex("by-order", "order");
+        const zoneStore = db.createObjectStore("zones", { keyPath: "id" });
+        zoneStore.createIndex("by-order", "order");
 
-      const domainStore = db.createObjectStore("domains", { keyPath: "id" });
-      domainStore.createIndex("by-order", "order");
+        const domainStore = db.createObjectStore("domains", { keyPath: "id" });
+        domainStore.createIndex("by-order", "order");
 
-      const objectiveStore = db.createObjectStore("objectives", {
-        keyPath: "id",
-      });
-      objectiveStore.createIndex("by-type", "type");
-      objectiveStore.createIndex("by-week", "weekStart");
+        const objectiveStore = db.createObjectStore("objectives", {
+          keyPath: "id",
+        });
+        objectiveStore.createIndex("by-type", "type");
+        objectiveStore.createIndex("by-week", "weekStart");
 
-      const interactionStore = db.createObjectStore("interactions", {
-        keyPath: "id",
-      });
-      interactionStore.createIndex("by-type", "type");
-      interactionStore.createIndex("by-date", "date");
+        const interactionStore = db.createObjectStore("interactions", {
+          keyPath: "id",
+        });
+        interactionStore.createIndex("by-type", "type");
+        interactionStore.createIndex("by-date", "date");
+      }
+
+      if (oldVersion < 2) {
+        const githubReposStore = db.createObjectStore("github-repos", {
+          keyPath: "id",
+        });
+        githubReposStore.createIndex("by-added-at", "addedAt");
+
+        db.createObjectStore("settings", { keyPath: "key" });
+      }
+
+      if (oldVersion < 3) {
+        db.createObjectStore("github-issues-cache", {
+          keyPath: "repoFullName",
+        });
+      }
     },
   });
 

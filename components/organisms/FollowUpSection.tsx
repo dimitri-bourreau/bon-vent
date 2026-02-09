@@ -67,7 +67,7 @@ export function FollowUpSection() {
     <section>
       <div className="mb-3 flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-lg font-semibold">
-          <span className="h-2 w-2 rounded-full bg-destructive" />A relancer (
+          <span className="h-2 w-2 rounded-full bg-destructive" />À relancer (
           {overdue.length})
         </h2>
         <Select

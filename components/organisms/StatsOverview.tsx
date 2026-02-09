@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { subDays, differenceInDays } from "date-fns";
+import { subDays, differenceInDays, isToday } from "date-fns";
 import { useCompanies } from "@/hooks/use-companies.hook";
 
 export function StatsOverview() {
@@ -29,6 +29,10 @@ export function StatsOverview() {
       (c) => c.contactedAt && new Date(c.contactedAt) >= oneWeekAgo,
     );
 
+    const appliedToday = contacted.filter(
+      (c) => c.contactedAt && isToday(new Date(c.contactedAt)),
+    );
+
     const avgResponseTime =
       responses.length > 0
         ? responses.reduce((sum, c) => {
@@ -51,6 +55,7 @@ export function StatsOverview() {
     return {
       total: companies.length,
       contacted: contacted.length,
+      appliedToday: appliedToday.length,
       thisWeek: thisWeek.length,
       responses: responses.length,
       interviews: interviews.length,
@@ -74,6 +79,11 @@ export function StatsOverview() {
           label="Contactées"
           value={stats.contacted}
           title="Entreprises avec une date de contact"
+        />
+        <Stat
+          label="Aujourd'hui"
+          value={stats.appliedToday}
+          title="Postulé aujourd'hui"
         />
         <Stat
           label="Cette semaine"

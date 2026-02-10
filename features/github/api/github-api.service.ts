@@ -19,7 +19,6 @@ export interface FetchIssuesResult {
   fromCache: boolean;
 }
 
-const MAX_ISSUES_PER_REPO = 10;
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000;
 
 export async function fetchIssues(
@@ -54,16 +53,8 @@ export async function fetchIssues(
       new Date(issueA.createdAt).getTime(),
   );
 
-  const issueCountByRepo = new Map<string, number>();
-  const limited = sorted.filter((issue) => {
-    const count = issueCountByRepo.get(issue.repositoryFullName) ?? 0;
-    if (count >= MAX_ISSUES_PER_REPO) return false;
-    issueCountByRepo.set(issue.repositoryFullName, count + 1);
-    return true;
-  });
-
   return {
-    issues: limited,
+    issues: sorted,
     error: hasError ? errorMessage : null,
     fromCache: allFromCache,
   };

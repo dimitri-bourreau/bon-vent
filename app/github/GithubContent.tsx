@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { X, AlertCircle } from "lucide-react";
+import { useQueryState } from "nuqs";
+import { X, AlertCircle, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,9 @@ import {
 } from "@/hooks/use-github-token.hook";
 
 export function GithubContent() {
+  const [searchQuery, setSearchQuery] = useQueryState("q", {
+    defaultValue: "",
+  });
   const [goodFirstIssueOnly, setGoodFirstIssueOnly] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
   const [repoUrl, setRepoUrl] = useState("");
@@ -36,8 +40,17 @@ export function GithubContent() {
     goodFirstIssueOnly,
   );
 
-  const issues = issuesResult?.issues ?? [];
+  const allIssues = issuesResult?.issues ?? [];
   const apiError = issuesResult?.error ?? null;
+
+  const normalizedQuery = searchQuery.toLowerCase().trim();
+  const issues = normalizedQuery
+    ? allIssues.filter(
+        (issue) =>
+          issue.title.toLowerCase().includes(normalizedQuery) ||
+          issue.number.toString().includes(normalizedQuery),
+      )
+    : allIssues;
 
   const handleAddRepo = (event: React.FormEvent) => {
     event.preventDefault();
@@ -176,6 +189,17 @@ export function GithubContent() {
             >
               Afficher uniquement les &quot;good first issue&quot;
             </Label>
+          </div>
+
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Rechercher par titre ou numéro..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              className="bg-white pl-9"
+            />
           </div>
 
           <GithubIssueList issues={issues} isLoading={issuesLoading} />

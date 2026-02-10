@@ -4,4 +4,5 @@ export type ApplicationStage =
   | "interview"
   | "offer"
   | "accepted"
-  | "rejected";
+  | "rejected"
+  | "ghosted";

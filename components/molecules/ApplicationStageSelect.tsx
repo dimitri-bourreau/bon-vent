@@ -16,6 +16,7 @@ const STAGES: { value: ApplicationStage; label: string; color: string }[] = [
   { value: "offer", label: "Offre", color: "bg-green-500" },
   { value: "accepted", label: "Accepté", color: "bg-emerald-600" },
   { value: "rejected", label: "Refusé", color: "bg-red-500" },
+  { value: "ghosted", label: "Ghosté", color: "bg-slate-400" },
 ];
 
 interface Props {

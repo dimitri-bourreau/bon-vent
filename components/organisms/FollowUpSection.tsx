@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Select,
   SelectContent,
@@ -17,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { SortHeader } from "@/components/atoms/SortHeader";
 import { ApplicationStageBadge } from "@/components/molecules/ApplicationStageSelect";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { formatRelative } from "@/features/dates/dates";
@@ -39,6 +40,14 @@ export function FollowUpSection() {
     return stored ? parseInt(stored, 10) : 7;
   });
   const [editCompany, setEditCompany] = useState<Company | null>(null);
+  const [sortKey, setSortKey] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem("followUpSortKey");
+  });
+  const [sortDir, setSortDir] = useState<"asc" | "desc">(() => {
+    if (typeof window === "undefined") return "asc";
+    return (localStorage.getItem("followUpSortDir") as "asc" | "desc") ?? "asc";
+  });
 
   const { data: overdue = [] } = useOverdue(delay);
   const updateCompany = useUpdateCompany();
@@ -47,6 +56,44 @@ export function FollowUpSection() {
   useEffect(() => {
     localStorage.setItem("followUpDelay", delay.toString());
   }, [delay]);
+
+  useEffect(() => {
+    if (sortKey) localStorage.setItem("followUpSortKey", sortKey);
+    else localStorage.removeItem("followUpSortKey");
+    localStorage.setItem("followUpSortDir", sortDir);
+  }, [sortKey, sortDir]);
+
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const sortedOverdue = useMemo(() => {
+    if (!sortKey) return overdue;
+    return [...overdue].sort((companyA, companyB) => {
+      let comparison = 0;
+      if (sortKey === "name") {
+        comparison = companyA.name.localeCompare(companyB.name);
+      } else if (sortKey === "stage") {
+        comparison = (companyA.applicationStage ?? "").localeCompare(
+          companyB.applicationStage ?? "",
+        );
+      } else if (sortKey === "contact") {
+        comparison = (companyA.contactName ?? "").localeCompare(
+          companyB.contactName ?? "",
+        );
+      } else if (sortKey === "contactedAt") {
+        comparison = (companyA.contactedAt ?? "").localeCompare(
+          companyB.contactedAt ?? "",
+        );
+      }
+      return sortDir === "asc" ? comparison : -comparison;
+    });
+  }, [overdue, sortKey, sortDir]);
 
   const handleSkipFollowUp = (companyId: string, event: React.MouseEvent) => {
     event.stopPropagation();
@@ -92,16 +139,48 @@ export function FollowUpSection() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-10"></TableHead>
-              <TableHead>Entreprise</TableHead>
-              <TableHead>Statut</TableHead>
+              <TableHead>
+                <SortHeader
+                  label="Entreprise"
+                  column="name"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
+              <TableHead>
+                <SortHeader
+                  label="Statut"
+                  column="stage"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
               <TableHead>Catégories</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead>Candidature</TableHead>
+              <TableHead>
+                <SortHeader
+                  label="Contact"
+                  column="contact"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
+              <TableHead>
+                <SortHeader
+                  label="Candidature"
+                  column="contactedAt"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
               <TableHead className="w-24"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {overdue.map((company) => (
+            {sortedOverdue.map((company) => (
               <TableRow
                 key={company.id}
                 className="cursor-pointer hover:bg-muted/50"

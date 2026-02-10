@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { SortHeader } from "@/components/atoms/SortHeader";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { ApplicationStageBadge } from "@/components/molecules/ApplicationStageSelect";
 import { formatRelative } from "@/features/dates/dates";
@@ -20,10 +21,56 @@ import type { CreateCompanyDTO } from "@/features/companies/types/create-company
 
 export function AwaitingResponseSection() {
   const [editCompany, setEditCompany] = useState<Company | null>(null);
+  const [sortKey, setSortKey] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem("awaitingSortKey");
+  });
+  const [sortDir, setSortDir] = useState<"asc" | "desc">(() => {
+    if (typeof window === "undefined") return "asc";
+    return (localStorage.getItem("awaitingSortDir") as "asc" | "desc") ?? "asc";
+  });
 
   const { data: awaiting = [] } = useAwaitingResponse();
   const updateCompany = useUpdateCompany();
   const toggleFavorite = useToggleFavorite();
+
+  useEffect(() => {
+    if (sortKey) localStorage.setItem("awaitingSortKey", sortKey);
+    else localStorage.removeItem("awaitingSortKey");
+    localStorage.setItem("awaitingSortDir", sortDir);
+  }, [sortKey, sortDir]);
+
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const sortedAwaiting = useMemo(() => {
+    if (!sortKey) return awaiting;
+    return [...awaiting].sort((companyA, companyB) => {
+      let comparison = 0;
+      if (sortKey === "name") {
+        comparison = companyA.name.localeCompare(companyB.name);
+      } else if (sortKey === "stage") {
+        comparison = (companyA.applicationStage ?? "").localeCompare(
+          companyB.applicationStage ?? "",
+        );
+      } else if (sortKey === "contact") {
+        comparison = (companyA.contactName ?? "").localeCompare(
+          companyB.contactName ?? "",
+        );
+      } else if (sortKey === "contactedAt") {
+        comparison = (companyA.contactedAt ?? "").localeCompare(
+          companyB.contactedAt ?? "",
+        );
+      }
+      return sortDir === "asc" ? comparison : -comparison;
+    });
+  }, [awaiting, sortKey, sortDir]);
 
   const handleUpdate = (data: CreateCompanyDTO) => {
     if (!editCompany) return;
@@ -47,15 +94,47 @@ export function AwaitingResponseSection() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-10"></TableHead>
-              <TableHead>Entreprise</TableHead>
-              <TableHead>Statut</TableHead>
+              <TableHead>
+                <SortHeader
+                  label="Entreprise"
+                  column="name"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
+              <TableHead>
+                <SortHeader
+                  label="Statut"
+                  column="stage"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
               <TableHead>Catégories</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead>Candidature</TableHead>
+              <TableHead>
+                <SortHeader
+                  label="Contact"
+                  column="contact"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
+              <TableHead>
+                <SortHeader
+                  label="Candidature"
+                  column="contactedAt"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {awaiting.map((company) => (
+            {sortedAwaiting.map((company) => (
               <TableRow
                 key={company.id}
                 className="cursor-pointer hover:bg-muted/50"

@@ -10,7 +10,7 @@ test.describe("Categories", () => {
   });
 
   test("filters companies by category", async ({ page }) => {
-    await setupWithData(page, "/favoris");
+    await setupWithData(page, "/contacts");
     await page.getByRole("button", { name: "Tech" }).click();
 
     await expect(page.getByText("Acme Corp")).toBeVisible();

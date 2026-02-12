@@ -156,6 +156,8 @@ export function CompanyList({
         cmp = (a.contactName ?? "").localeCompare(b.contactName ?? "");
       } else if (sortKey === "contactedAt") {
         cmp = (a.contactedAt ?? "").localeCompare(b.contactedAt ?? "");
+      } else if (sortKey === "favorite") {
+        cmp = (a.isFavorite ? 1 : 0) - (b.isFavorite ? 1 : 0);
       }
       return sortDir === "asc" ? cmp : -cmp;
     });
@@ -201,7 +203,15 @@ export function CompanyList({
                   />
                 </TableHead>
               )}
-              <TableHead className="w-10"></TableHead>
+              <TableHead className="w-10">
+                <SortHeader
+                  label="★"
+                  column="favorite"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                />
+              </TableHead>
               <TableHead>
                 <SortHeader
                   label="Entreprise"
@@ -241,7 +251,7 @@ export function CompanyList({
                   onSort={handleSort}
                 />
               </TableHead>
-              <TableHead className="w-10"></TableHead>
+              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -332,12 +342,11 @@ export function CompanyList({
                 </TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()}>
                   <Button
-                    variant="ghost"
+                    variant="destructive"
                     size="sm"
-                    className="h-7 w-7 p-0 text-destructive hover:bg-destructive/10"
                     onClick={() => setDeleteId(company.id)}
                   >
-                    ×
+                    Supprimer
                   </Button>
                 </TableCell>
               </TableRow>

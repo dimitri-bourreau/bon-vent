@@ -3,16 +3,16 @@ import { clearIndexedDB, setupWithData } from "./helpers";
 
 test.describe("Company CRUD", () => {
   test("shows empty state when no data", async ({ page }) => {
-    await page.goto("/favoris");
+    await page.goto("/contacts");
     await clearIndexedDB(page);
     await page.reload();
     await expect(
-      page.getByText("Ajoutez des entreprises qui vous inspirent"),
+      page.getByText("Aucune entreprise pour le moment"),
     ).toBeVisible();
   });
 
   test("creates a new company", async ({ page }) => {
-    await page.goto("/favoris");
+    await page.goto("/contacts");
     await clearIndexedDB(page);
     await page.reload();
 
@@ -24,7 +24,7 @@ test.describe("Company CRUD", () => {
   });
 
   test("edits a company", async ({ page }) => {
-    await setupWithData(page, "/favoris");
+    await setupWithData(page, "/contacts");
     await expect(page.getByText("Acme Corp")).toBeVisible();
 
     await page.locator("tr", { hasText: "Acme Corp" }).click();
@@ -39,11 +39,11 @@ test.describe("Company CRUD", () => {
   });
 
   test("deletes a company", async ({ page }) => {
-    await setupWithData(page, "/favoris");
+    await setupWithData(page, "/contacts");
     await expect(page.getByText("TechStart")).toBeVisible();
 
     const row = page.locator("tr", { hasText: "TechStart" });
-    await row.getByRole("button", { name: "×" }).click();
+    await row.getByRole("button", { name: "Supprimer" }).click();
 
     await expect(page.getByRole("alertdialog")).toBeVisible();
     await page.getByRole("button", { name: "Supprimer" }).click();

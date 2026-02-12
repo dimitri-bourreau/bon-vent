@@ -23,7 +23,7 @@ export const mockDomains = [
 ];
 
 export const mockCompanies = [
-  // Favorite companies (on /favoris page)
+  // Favorite companies
   {
     id: "company-1",
     name: "Acme Corp",

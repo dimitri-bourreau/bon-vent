@@ -9,7 +9,7 @@ import { StatsCard } from "@/components/molecules/StatsCard";
 import { CompanyList } from "@/components/organisms/CompanyList";
 import { CompanyForm } from "@/components/organisms/CompanyForm";
 import { CategoryTabs } from "@/components/organisms/CategoryTabs";
-import { useContacted } from "@/hooks/use-contacted.hook";
+import { useCompanies } from "@/hooks/use-companies.hook";
 import { useCreateCompany } from "@/hooks/use-create-company.hook";
 import { useUpdateCompany } from "@/hooks/use-update-company.hook";
 import type { Company } from "@/features/companies/types/company.type";
@@ -19,23 +19,18 @@ export function ContactsContent() {
   const [showForm, setShowForm] = useState(false);
   const [editCompany, setEditCompany] = useState<Company | null>(null);
   const [category] = useQueryState("category");
-  const { data: contacted = [] } = useContacted();
+  const { data: companies = [] } = useCompanies();
   const createCompany = useCreateCompany();
   const updateCompany = useUpdateCompany();
 
   const filtered = category
-    ? contacted.filter((c) => c.categories.includes(category))
-    : contacted;
+    ? companies.filter((c) => c.categories.includes(category))
+    : companies;
 
-  const sorted = [...filtered].sort((a, b) => {
-    if (!a.contactedAt || !b.contactedAt) return 0;
-    return b.contactedAt.localeCompare(a.contactedAt);
-  });
-
-  const actuallyContacted = contacted.filter((c) => c.contactedAt);
-  const applied = contacted.filter((c) => c.applicationStage === "applied");
-  const rejected = contacted.filter((c) => c.applicationStage === "rejected");
-  const interviewing = contacted.filter(
+  const favorites = companies.filter((c) => c.isFavorite);
+  const actuallyContacted = companies.filter((c) => c.contactedAt);
+  const rejected = companies.filter((c) => c.applicationStage === "rejected");
+  const interviewing = companies.filter(
     (c) =>
       c.applicationStage === "interview" ||
       c.applicationStage === "offer" ||
@@ -60,8 +55,8 @@ export function ContactsContent() {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <PageHeader
-        title="Entreprises contactées"
-        subtitle="Historique de vos prises de contact"
+        title="Entreprises"
+        subtitle="Toutes vos entreprises favorites et contactées"
       >
         <SearchBar onSelect={setEditCompany} />
       </PageHeader>
@@ -70,14 +65,14 @@ export function ContactsContent() {
         <aside className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
             <StatsCard
+              title="Favorites"
+              value={favorites.length}
+              variant="warning"
+            />
+            <StatsCard
               title="Contactées"
               value={actuallyContacted.length}
               variant="primary"
-            />
-            <StatsCard
-              title="Postulé"
-              value={applied.length}
-              variant="default"
             />
             <StatsCard
               title="En cours"
@@ -100,12 +95,12 @@ export function ContactsContent() {
             </Button>
           </div>
           <CompanyList
-            companies={sorted}
+            companies={filtered}
             showBulkActions
             emptyMessage={
               category
-                ? `Aucun contact dans "${category}"`
-                : "Aucun contact pour le moment"
+                ? `Aucune entreprise dans "${category}"`
+                : "Aucune entreprise pour le moment"
             }
           />
         </div>

@@ -7,8 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { NavIcon } from "@/components/atoms/NavIcon";
 import { cn } from "@/features/ui/cn";
 import { exportAllData, importAllData } from "@/features/db/export";
-import { useFavorites } from "@/hooks/use-favorites.hook";
-import { useContacted } from "@/hooks/use-contacted.hook";
+import { useCompanies } from "@/hooks/use-companies.hook";
 
 const NAV_ITEMS = [
   {
@@ -18,15 +17,9 @@ const NAV_ITEMS = [
     icon: "home" as const,
   },
   {
-    href: "/favoris",
-    label: "Favoris",
-    shortLabel: "Favoris",
-    icon: "heart" as const,
-  },
-  {
     href: "/contacts",
-    label: "Contacts",
-    shortLabel: "Contacts",
+    label: "Entreprises",
+    shortLabel: "Entreprises",
     icon: "users" as const,
   },
   {
@@ -47,8 +40,7 @@ export function Navigation() {
   const pathname = usePathname();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const { data: favorites = [] } = useFavorites();
-  const { data: contacted = [] } = useContacted();
+  const { data: companies = [] } = useCompanies();
 
   const handleExport = async () => {
     const data = await exportAllData();
@@ -78,12 +70,7 @@ export function Navigation() {
         <div className="flex items-center gap-1 sm:gap-2">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
-            const count =
-              item.href === "/favoris"
-                ? favorites.length
-                : item.href === "/contacts"
-                  ? contacted.length
-                  : null;
+            const count = item.href === "/contacts" ? companies.length : null;
             return (
               <Link
                 key={item.href}

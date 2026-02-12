@@ -4,14 +4,10 @@ test.describe("Navigation", () => {
   test("navigates between pages", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("link", { name: "Favoris" }).click();
-    await expect(page).toHaveURL("/favoris");
-    await expect(page.getByText("Entreprises inspirantes")).toBeVisible();
-
-    await page.getByRole("link", { name: "Contacts" }).click();
+    await page.getByRole("link", { name: "Entreprises" }).click();
     await expect(page).toHaveURL("/contacts");
     await expect(
-      page.getByText("Historique de vos prises de contact"),
+      page.getByText("Toutes vos entreprises favorites et contactées"),
     ).toBeVisible();
 
     await page.getByRole("link", { name: "Interactions" }).click();

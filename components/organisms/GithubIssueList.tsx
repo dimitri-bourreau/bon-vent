@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink, MessageCircle } from "lucide-react";
+import { formatRelative } from "@/features/dates/dates";
 import {
   Table,
   TableBody,
@@ -39,6 +40,7 @@ export function GithubIssueList({ issues, isLoading }: Props) {
         <TableRow>
           <TableHead className="w-32">Repo</TableHead>
           <TableHead>Issue</TableHead>
+          <TableHead className="w-28">Créée</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -67,6 +69,9 @@ export function GithubIssueList({ issues, isLoading }: Props) {
                   {issue.comments}
                 </span>
               </a>
+            </TableCell>
+            <TableCell className="py-2 text-xs text-muted-foreground">
+              {formatRelative(issue.createdAt)}
             </TableCell>
           </TableRow>
         ))}

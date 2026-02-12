@@ -4,6 +4,9 @@ const DB_VERSION = 3;
 
 export async function exportAllData(): Promise<string> {
   const db = await getDB();
+  const settings = await db.getAll("settings");
+  const githubToken = settings.find((s) => s.key === "github-token")?.value;
+
   const data = {
     companies: await db.getAll("companies"),
     zones: await db.getAll("zones"),
@@ -11,6 +14,7 @@ export async function exportAllData(): Promise<string> {
     objectives: await db.getAll("objectives"),
     interactions: await db.getAll("interactions"),
     githubRepos: await db.getAll("github-repos"),
+    githubToken,
     exportedAt: new Date().toISOString(),
     version: DB_VERSION,
   };
@@ -29,6 +33,7 @@ export async function importAllData(jsonString: string): Promise<void> {
       "objectives",
       "interactions",
       "github-repos",
+      "settings",
     ],
     "readwrite",
   );
@@ -59,6 +64,11 @@ export async function importAllData(jsonString: string): Promise<void> {
   }
   for (const repo of data.githubRepos || []) {
     await tx.objectStore("github-repos").put(repo);
+  }
+  if (data.githubToken) {
+    await tx
+      .objectStore("settings")
+      .put({ key: "github-token", value: data.githubToken });
   }
 
   await tx.done;

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQueryState } from "nuqs";
-import { X, AlertCircle, Search } from "lucide-react";
+import { X, AlertCircle, Search, RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -30,18 +30,19 @@ export function GithubContent() {
   const [tokenInput, setTokenInput] = useState("");
 
   const { data: repos = [] } = useGithubRepos();
-  const { data: token } = useGithubToken();
+  const { data: token, isLoading: tokenLoading } = useGithubToken();
   const addRepo = useAddGithubRepo();
   const removeRepo = useRemoveGithubRepo();
   const setToken = useSetGithubToken();
-  const { data: issuesResult, isLoading: issuesLoading } = useGithubIssues(
+  const issuesState = useGithubIssues(
     repos,
-    token ?? null,
+    token,
     goodFirstIssueOnly,
+    tokenLoading,
   );
 
-  const allIssues = issuesResult?.issues ?? [];
-  const apiError = issuesResult?.error ?? null;
+  const allIssues = issuesState.issues;
+  const apiErrors = issuesState.errors;
 
   const normalizedQuery = searchQuery.toLowerCase().trim();
   const issues = normalizedQuery
@@ -168,10 +169,11 @@ export function GithubContent() {
 
           {addError && <p className="text-sm text-destructive">{addError}</p>}
 
-          {apiError && (
+          {apiErrors.length > 0 && (
             <div className="flex items-center gap-2 rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
               <AlertCircle className="h-4 w-4 shrink-0" />
-              {apiError}
+              {apiErrors[0]}
+              {apiErrors.length > 1 && ` (+${apiErrors.length - 1} autres)`}
             </div>
           )}
 
@@ -189,6 +191,17 @@ export function GithubContent() {
             >
               Afficher uniquement les &quot;good first issue&quot;
             </Label>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={issuesState.refetch}
+              disabled={issuesState.isLoading}
+            >
+              <RefreshCw
+                className={`h-4 w-4 ${issuesState.isLoading ? "animate-spin" : ""}`}
+              />
+              Rafraîchir
+            </Button>
           </div>
 
           <div className="relative">
@@ -202,7 +215,17 @@ export function GithubContent() {
             />
           </div>
 
-          <GithubIssueList issues={issues} isLoading={issuesLoading} />
+          {issuesState.isLoading && issuesState.totalRepos > 0 && (
+            <p className="text-sm text-muted-foreground">
+              Chargement... ({issuesState.loadedRepos}/{issuesState.totalRepos}{" "}
+              repos)
+            </p>
+          )}
+
+          <GithubIssueList
+            issues={issues}
+            isLoading={issuesState.isLoading && issues.length === 0}
+          />
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ export interface GithubIssue {
   labels: string[];
   state: string;
   createdAt: string;
+  updatedAt?: string;
   repositoryFullName: string;
   comments: number;
 }

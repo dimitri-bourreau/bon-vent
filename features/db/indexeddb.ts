@@ -93,17 +93,7 @@ export interface BonVentDB extends DBSchema {
         labels: string[];
         state: string;
         createdAt: string;
-        repositoryFullName: string;
-        comments: number;
-      }>;
-      goodFirstIssues: Array<{
-        id: number;
-        number: number;
-        title: string;
-        url: string;
-        labels: string[];
-        state: string;
-        createdAt: string;
+        updatedAt?: string;
         repositoryFullName: string;
         comments: number;
       }>;

@@ -55,6 +55,11 @@ export class CompanyApiAdapter implements CompanyRepository {
     return all.filter((c) => c.applicationStage === "applied" && c.contactedAt);
   }
 
+  async getInterviews(): Promise<Company[]> {
+    const all = await this.getAll();
+    return all.filter((c) => c.applicationStage === "interview");
+  }
+
   async getWaiting(): Promise<Company[]> {
     const all = await this.getAll();
     return all.filter(

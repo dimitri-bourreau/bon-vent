@@ -10,6 +10,7 @@ import { StatsOverview } from "@/components/organisms/StatsOverview";
 import { CalendarView } from "@/components/organisms/CalendarView";
 import { FollowUpSection } from "@/components/organisms/FollowUpSection";
 import { AwaitingResponseSection } from "@/components/organisms/AwaitingResponseSection";
+import { InterviewsSection } from "@/components/organisms/InterviewsSection";
 import { useCompanies } from "@/hooks/use-companies.hook";
 import { useUpdateCompany } from "@/hooks/use-update-company.hook";
 import { useCategories } from "@/hooks/use-categories.hook";
@@ -61,6 +62,7 @@ export default function HomePage() {
         </aside>
 
         <div className="flex min-h-0 flex-col gap-6 overflow-auto">
+          <InterviewsSection />
           <CalendarView onSelectCompany={setEditCompany} />
           <FollowUpSection />
           <AwaitingResponseSection />

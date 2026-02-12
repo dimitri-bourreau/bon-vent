@@ -13,6 +13,7 @@ export interface CompanyRepository {
   getOverdue(days: number): Promise<Company[]>;
   getWaiting(): Promise<Company[]>;
   getAwaitingResponse(): Promise<Company[]>;
+  getInterviews(): Promise<Company[]>;
   search(query: string): Promise<Company[]>;
   findDuplicates(name: string): Promise<Company[]>;
   create(dto: CreateCompanyDTO): Promise<Company>;

@@ -47,7 +47,7 @@ export function GithubIssueList({ issues, isLoading }: Props) {
         {issues.map((issue, index) => (
           <TableRow
             key={issue.id}
-            className={index % 2 === 0 ? "bg-white" : "bg-muted/30"}
+            className={index % 2 === 0 ? "bg-background" : "bg-muted/30"}
           >
             <TableCell className="py-2 text-xs text-muted-foreground">
               {issue.repositoryFullName.split("/")[1]}

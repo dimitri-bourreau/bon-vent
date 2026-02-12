@@ -99,7 +99,7 @@ export function GithubContent() {
                 placeholder={token ? "••••••••" : "ghp_..."}
                 value={tokenInput}
                 onChange={(event) => setTokenInput(event.target.value)}
-                className="bg-white"
+                className="bg-background"
               />
               <Button
                 size="sm"
@@ -132,7 +132,7 @@ export function GithubContent() {
                 placeholder="https://github.com/owner/repo"
                 value={repoUrl}
                 onChange={(event) => setRepoUrl(event.target.value)}
-                className="w-64 bg-white"
+                className="w-64 bg-background"
               />
               <Button
                 type="submit"
@@ -211,7 +211,7 @@ export function GithubContent() {
               placeholder="Rechercher par titre ou numéro..."
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              className="bg-white pl-9"
+              className="bg-background pl-9"
             />
           </div>
 
